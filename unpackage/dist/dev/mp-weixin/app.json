@@ -1,0 +1,18 @@
+{
+    "pages": [
+        "pages/index/index",
+        "pages/my/index",
+        "pages/my/record"
+    ],
+    "subPackages": [],
+    "window": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "工蜂招工找活平台",
+        "navigationBarBackgroundColor": "#FFE37B",
+        "backgroundColor": "#FFE37B",
+        "backgroundColorTop": "#F7F7F7",
+        "backgroundColorBottom": "#F7F7F7"
+    },
+    "usingComponents": {},
+    "sitemapLocation": "sitemap.json"
+}

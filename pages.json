@@ -1,0 +1,35 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "工蜂招工找活平台",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true //开启上拉
+			}
+		}, {
+			"path": "pages/my/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/my/record",
+			"style": {
+				"navigationBarTitleText": "查看记录",
+				"navigationStyle": "custom"
+			}
+		}
+	],
+	/* 全局页面样式 */
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "工蜂招工找活平台", // 全局默认标题
+		"navigationBarBackgroundColor": "#FFE37B", //导航条颜色//2330e5蓝
+		"backgroundColor": "#FFE37B", //页面颜色
+		"backgroundColorTop": "#F7F7F7", //顶部窗口的背景色
+		"backgroundColorBottom": "#F7F7F7" //底部窗口的背景色
+
+	},
+	"uniIdRouter": {}
+}
