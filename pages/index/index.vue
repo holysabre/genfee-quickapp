@@ -13,14 +13,16 @@
 			</view>
 			<view class="tabList">
 				<view class="tab tab1" @click="tab=1">
-					找活
+					<image src="../../static/images/tabFind.png" mode="" v-if="tab!=1"></image>
+					<image src="../../static/images/tabFindActive.png" mode="" v-if="tab==1"></image>
 				</view>
 				<view class="line"></view>
 				<view class="tab tab2" @click="tab=2">
-					招工
+					<image src="../../static/images/tabRecruit.png" mode="" v-if="tab!=2"></image>
+					<image src="../../static/images/tabRecruitActive.png" mode="" v-if="tab==2"></image>
 				</view>
 			</view>
-			<image src="../../static/images/user.png" mode="" class="user"></image>
+			<image src="../../static/images/user.png" mode="" class="user" @click="toUser"></image>
 		</view>
 		<view class="list">
 			<view class="item" v-for="(item,index) in 13" :key="index">
@@ -67,8 +69,14 @@
 			this.headHeight = sys.height + 60;
 			this.windowHeight = sys.windowHeight;
 			this.barHeight = sys.barHeight
-
 		},
+		methods:{
+			toUser(){
+				uni.navigateTo({
+					url:'/pages/my/index'
+				})
+			},
+		}
 	}
 </script>
 
@@ -129,6 +137,14 @@
 				.tab {
 					width: 48%;
 					text-align: center;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					image {
+						width: 63rpx;
+						height: 30rpx;
+					}
 				}
 
 				.tab1 {
