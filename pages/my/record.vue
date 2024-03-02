@@ -1,30 +1,32 @@
 <template>
 	<view class="content" :style="{ paddingTop: headTop + 'px' }">
-		<view class="navigater" :style="{height: barHeight + 'px',top:headTop + 'px' }">
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="navigater" @click="onBack" :style="{height: barHeight + 'px' }">
 			<image src="../../static/images/back.png" mode="" class="icon"></image>
 			<view class="title">
 				我的
 			</view>
 		</view>
+		<!-- #endif -->
 		<view class="list">
-			<view class="item" v-for="(item,index) in 13" :key="index">
+			<view class="item" v-for="(item,index) in list" :key="index">
 				<view class="top">
 					<view class="lBox">
-						<image src="../../static/images/find.png" mode="" v-if="tab===1"></image>
-						<image src="../../static/images/recruit.png" mode="" v-if="tab===2"></image>
-						<text>泥瓦工</text>
+						<image src="../../static/images/find.png" mode="" v-if="tab===2"></image>
+						<image src="../../static/images/recruit.png" mode="" v-if="tab===1"></image>
+						<text>{{item.topic.category_name}}</text>
 					</view>
-					<view class="rBox">
+					<view class="rBox" @click="onPhone(item)">
 						<image src="../../static/images/phone.png" mode=""></image>
 						<text>立刻联系</text>
 					</view>
 				</view>
 				<view class="detail">
-					本人承接很多政府项目，项目想做长期的，而且稳定靠谱的，目前有长房的商业楼项目，万达的民主楼的项目在做，队伍想扩充，有兴趣的一起…
+					{{item.topic.content}}
 				</view>
 				<view class="bot">
 					<image src="../../static/images/address.png" mode=""></image>
-					<text>浙江省宁波市鄞州区东吴镇</text>
+					<text>{{item.topic.address}}</text>
 				</view>
 			</view>
 		</view>
@@ -32,6 +34,10 @@
 </template>
 
 <script>
+	import {
+		getContactHistory,
+		addContact
+	} from "@/api/index.js"
 	export default {
 		data() {
 			return {
@@ -40,24 +46,83 @@
 				windowHeight: 0,
 				headTop: 0,
 
-				tab: 1, //1:找活  2:招工
+				page: 1,
+				pageTotal: -1,
+				list: []
 			}
 		},
 		onShow() {
 			// 计算页面尺寸
 			let sys = this.$beeMin.beesys();
 			console.log('sys===>', sys)
+			// #ifdef MP-WEIXIN
 			this.headTop = sys.top;
+			// #endif
 			this.headHeight = sys.height + 60;
 			this.windowHeight = sys.windowHeight;
 			this.barHeight = sys.barHeight
-
 		},
+		onLoad() {
+			this.getList(false, true)
+		},
+		onPullDownRefresh() {
+			this.page = 1
+			this.getList(true, true)
+		},
+		onReachBottom() {
+			if (this.page < this.pageTotal) {
+				this.page += 1
+				this.getList(false, false)
+			}
+		},
+		methods: {
+			onBack() {
+				uni.navigateBack({
+					delta: 1
+				})
+			},
+			//拨打电话
+			onPhone(item) {
+				addContact(item.contact_id).then(res => {
+					uni.makePhoneCall({
+						phoneNumber: res.data.data.mobile.toString(), //电话号码
+						success: function(e) {
+							console.log(e);
+						},
+						fail: function(e) {
+							console.log(e);
+
+						}
+					})
+				}).catch(err => {
+
+				})
+			},
+			async getList(refresh, replace) {
+				let res = await getContactHistory({
+					page: this.page,
+					per_page: 10,
+				})
+				console.log('getList-res--->', res)
+				if (res.code === 200) {
+					let origin = this.list
+					if (replace) {
+						origin = []
+					}
+					this.list = origin.concat(res.data.data)
+					this.pageTotal = res.data.last_page
+				}
+				if (refresh) {
+					uni.stopPullDownRefresh()
+				}
+			}
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.content {
+		padding-bottom: 100rpx;
 
 		.navigater {
 			display: flex;
@@ -66,6 +131,7 @@
 			position: sticky;
 			z-index: 99;
 			background-color: #FFE37B;
+
 			.icon {
 				width: 60rpx;
 				height: 60rpx;

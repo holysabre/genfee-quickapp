@@ -73,7 +73,7 @@
   color: #222222;
 }
 .content .main .top .btn.data-v-4dcceeb0 {
-  width: 182rpx;
+  width: 210rpx;
   height: 50rpx;
   border-radius: 26rpx;
   border: 2rpx solid #FFE37B;
@@ -81,6 +81,12 @@
   color: #FFC900;
   line-height: 50rpx;
   text-align: center;
+  background-color: transparent;
+  display: block;
+  margin: 0;
+}
+.content .main .top .btn.data-v-4dcceeb0::after {
+  border: none;
 }
 .content .main .bot.data-v-4dcceeb0 {
   display: flex;

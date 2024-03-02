@@ -1,5 +1,6 @@
 {
   "navigationBarTitleText": "查看记录",
   "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
   "usingComponents": {}
 }

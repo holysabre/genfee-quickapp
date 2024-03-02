@@ -9644,6 +9644,914 @@ uni.addInterceptor({
 });
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
+/***/ }),
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */
+/*!************************************************************************************************!*\
+  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/@babel/runtime/regenerator/index.js ***!
+  \************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// TODO(Babel 8): Remove this file.
+
+var runtime = __webpack_require__(/*! @babel/runtime/helpers/regeneratorRuntime */ 41)();
+module.exports = runtime;
+
+/***/ }),
+/* 41 */
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/regeneratorRuntime.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _typeof = __webpack_require__(/*! ./typeof.js */ 13)["default"];
+function _regeneratorRuntime() {
+  "use strict";
+
+  /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+  module.exports = _regeneratorRuntime = function _regeneratorRuntime() {
+    return exports;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports;
+  var exports = {},
+    Op = Object.prototype,
+    hasOwn = Op.hasOwnProperty,
+    defineProperty = Object.defineProperty || function (obj, key, desc) {
+      obj[key] = desc.value;
+    },
+    $Symbol = "function" == typeof Symbol ? Symbol : {},
+    iteratorSymbol = $Symbol.iterator || "@@iterator",
+    asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator",
+    toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+  function define(obj, key, value) {
+    return Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: !0,
+      configurable: !0,
+      writable: !0
+    }), obj[key];
+  }
+  try {
+    define({}, "");
+  } catch (err) {
+    define = function define(obj, key, value) {
+      return obj[key] = value;
+    };
+  }
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator,
+      generator = Object.create(protoGenerator.prototype),
+      context = new Context(tryLocsList || []);
+    return defineProperty(generator, "_invoke", {
+      value: makeInvokeMethod(innerFn, self, context)
+    }), generator;
+  }
+  function tryCatch(fn, obj, arg) {
+    try {
+      return {
+        type: "normal",
+        arg: fn.call(obj, arg)
+      };
+    } catch (err) {
+      return {
+        type: "throw",
+        arg: err
+      };
+    }
+  }
+  exports.wrap = wrap;
+  var ContinueSentinel = {};
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+  var IteratorPrototype = {};
+  define(IteratorPrototype, iteratorSymbol, function () {
+    return this;
+  });
+  var getProto = Object.getPrototypeOf,
+    NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype);
+  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype);
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function (method) {
+      define(prototype, method, function (arg) {
+        return this._invoke(method, arg);
+      });
+    });
+  }
+  function AsyncIterator(generator, PromiseImpl) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if ("throw" !== record.type) {
+        var result = record.arg,
+          value = result.value;
+        return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) {
+          invoke("next", value, resolve, reject);
+        }, function (err) {
+          invoke("throw", err, resolve, reject);
+        }) : PromiseImpl.resolve(value).then(function (unwrapped) {
+          result.value = unwrapped, resolve(result);
+        }, function (error) {
+          return invoke("throw", error, resolve, reject);
+        });
+      }
+      reject(record.arg);
+    }
+    var previousPromise;
+    defineProperty(this, "_invoke", {
+      value: function value(method, arg) {
+        function callInvokeWithMethodAndArg() {
+          return new PromiseImpl(function (resolve, reject) {
+            invoke(method, arg, resolve, reject);
+          });
+        }
+        return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
+      }
+    });
+  }
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = "suspendedStart";
+    return function (method, arg) {
+      if ("executing" === state) throw new Error("Generator is already running");
+      if ("completed" === state) {
+        if ("throw" === method) throw arg;
+        return doneResult();
+      }
+      for (context.method = method, context.arg = arg;;) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+        if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) {
+          if ("suspendedStart" === state) throw state = "completed", context.arg;
+          context.dispatchException(context.arg);
+        } else "return" === context.method && context.abrupt("return", context.arg);
+        state = "executing";
+        var record = tryCatch(innerFn, self, context);
+        if ("normal" === record.type) {
+          if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue;
+          return {
+            value: record.arg,
+            done: context.done
+          };
+        }
+        "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg);
+      }
+    };
+  }
+  function maybeInvokeDelegate(delegate, context) {
+    var methodName = context.method,
+      method = delegate.iterator[methodName];
+    if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel;
+    var record = tryCatch(method, delegate.iterator, context.arg);
+    if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel;
+    var info = record.arg;
+    return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel);
+  }
+  function pushTryEntry(locs) {
+    var entry = {
+      tryLoc: locs[0]
+    };
+    1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry);
+  }
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal", delete record.arg, entry.completion = record;
+  }
+  function Context(tryLocsList) {
+    this.tryEntries = [{
+      tryLoc: "root"
+    }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0);
+  }
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) return iteratorMethod.call(iterable);
+      if ("function" == typeof iterable.next) return iterable;
+      if (!isNaN(iterable.length)) {
+        var i = -1,
+          next = function next() {
+            for (; ++i < iterable.length;) {
+              if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next;
+            }
+            return next.value = undefined, next.done = !0, next;
+          };
+        return next.next = next;
+      }
+    }
+    return {
+      next: doneResult
+    };
+  }
+  function doneResult() {
+    return {
+      value: undefined,
+      done: !0
+    };
+  }
+  return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", {
+    value: GeneratorFunctionPrototype,
+    configurable: !0
+  }), defineProperty(GeneratorFunctionPrototype, "constructor", {
+    value: GeneratorFunction,
+    configurable: !0
+  }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) {
+    var ctor = "function" == typeof genFun && genFun.constructor;
+    return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name));
+  }, exports.mark = function (genFun) {
+    return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun;
+  }, exports.awrap = function (arg) {
+    return {
+      __await: arg
+    };
+  }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
+    return this;
+  }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+    void 0 === PromiseImpl && (PromiseImpl = Promise);
+    var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl);
+    return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) {
+      return result.done ? result.value : iter.next();
+    });
+  }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () {
+    return this;
+  }), define(Gp, "toString", function () {
+    return "[object Generator]";
+  }), exports.keys = function (val) {
+    var object = Object(val),
+      keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    return keys.reverse(), function next() {
+      for (; keys.length;) {
+        var key = keys.pop();
+        if (key in object) return next.value = key, next.done = !1, next;
+      }
+      return next.done = !0, next;
+    };
+  }, exports.values = values, Context.prototype = {
+    constructor: Context,
+    reset: function reset(skipTempReset) {
+      if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) {
+        "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined);
+      }
+    },
+    stop: function stop() {
+      this.done = !0;
+      var rootRecord = this.tryEntries[0].completion;
+      if ("throw" === rootRecord.type) throw rootRecord.arg;
+      return this.rval;
+    },
+    dispatchException: function dispatchException(exception) {
+      if (this.done) throw exception;
+      var context = this;
+      function handle(loc, caught) {
+        return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught;
+      }
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i],
+          record = entry.completion;
+        if ("root" === entry.tryLoc) return handle("end");
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc"),
+            hasFinally = hasOwn.call(entry, "finallyLoc");
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0);
+            if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc);
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0);
+          } else {
+            if (!hasFinally) throw new Error("try statement without catch or finally");
+            if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc);
+          }
+        }
+      }
+    },
+    abrupt: function abrupt(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+      finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null);
+      var record = finallyEntry ? finallyEntry.completion : {};
+      return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record);
+    },
+    complete: function complete(record, afterLoc) {
+      if ("throw" === record.type) throw record.arg;
+      return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel;
+    },
+    finish: function finish(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel;
+      }
+    },
+    "catch": function _catch(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if ("throw" === record.type) {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+      throw new Error("illegal catch attempt");
+    },
+    delegateYield: function delegateYield(iterable, resultName, nextLoc) {
+      return this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      }, "next" === this.method && (this.arg = undefined), ContinueSentinel;
+    }
+  }, exports;
+}
+module.exports = _regeneratorRuntime, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+/* 42 */
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/asyncToGenerator.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+      args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+      _next(undefined);
+    });
+  };
+}
+module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+/* 43 */
+/*!**********************************************************!*\
+  !*** /Users/umbush/project/worker-bee-mini/api/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.loginByWeixin = exports.loginByDouyin = exports.getUserInfo = exports.getTopics = exports.getContactHistory = exports.editUser = exports.addContact = void 0;
+var _request = __webpack_require__(/*! @/utils/request */ 44);
+// 微信登录
+var loginByWeixin = function loginByWeixin(params) {
+  return (0, _request.requestFun)('post', '/auth/login/wechat', params);
+};
+
+// 抖音登录
+exports.loginByWeixin = loginByWeixin;
+var loginByDouyin = function loginByDouyin(params) {
+  return (0, _request.requestFun)('post', '/auth/login/douyin', params);
+};
+
+// 获得话题列表
+exports.loginByDouyin = loginByDouyin;
+var getTopics = function getTopics(params) {
+  return (0, _request.requestFun)('get', '/topics', params);
+};
+
+// 我的
+exports.getTopics = getTopics;
+var getUserInfo = function getUserInfo() {
+  return (0, _request.requestFun)('get', "/users/mine");
+};
+
+// 修改资料
+exports.getUserInfo = getUserInfo;
+var editUser = function editUser() {
+  return (0, _request.requestFun)('put', "/users");
+};
+
+// 发起沟通
+exports.editUser = editUser;
+var addContact = function addContact(contact_id) {
+  return (0, _request.requestFun)('put', "/users/".concat(contact_id, "/contact"));
+};
+
+// 沟通历史
+exports.addContact = addContact;
+var getContactHistory = function getContactHistory() {
+  return (0, _request.requestFun)('get', "/users/contact_history");
+};
+exports.getContactHistory = getContactHistory;
+
+/***/ }),
+/* 44 */
+/*!**************************************************************!*\
+  !*** /Users/umbush/project/worker-bee-mini/utils/request.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.requestFun = requestFun;
+exports.requestFunForJson = requestFunForJson;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 40));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 42));
+var _config = _interopRequireDefault(__webpack_require__(/*! @/config/config.js */ 45));
+var _api = __webpack_require__(/*! @/api */ 43);
+var _tool = __webpack_require__(/*! @/utils/tool */ 46);
+function requestFun(method, url) {
+  var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  console.log('requestFun==>');
+  var header = {
+    'content-type': 'application/json'
+    // 'User-Agent':'GenFee/3.1.9'
+    // 'Content-Type': 'application/x-www-form-urlencoded'
+  };
+
+  // 不需要传token的api路径，如"/app/auth/captcha"
+  var whiteList = ['/auth/login/wechat', '/topics'];
+  // 用户已登录时需要传token，没登录时不需要传token的api路径
+  var tokenList = [];
+  var index = url.indexOf('?'),
+    realUrl = url;
+  if (index >= 0) {
+    realUrl = url.substr(0, index);
+  }
+  if (whiteList.indexOf(realUrl) < 0 || tokenList.indexOf(realUrl) >= 0) {
+    var token = uni.getStorageSync('token') || '';
+    if (token) {
+      header['Authorization'] = token;
+    } else if (tokenList.indexOf(realUrl) < 0) {
+      // uni.navigateTo({
+      // 	url: '/packageA/login/login'
+      // })
+    }
+  }
+  return new Promise(function (resolve, reject) {
+    uni.request({
+      url: _config.default.baseUrl + url,
+      method: method,
+      header: Object.assign({}, header),
+      data: data,
+      success: function () {
+        var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(res) {
+          return _regenerator.default.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  console.log('fullurl===>', _config.default.baseUrl + url);
+                  console.log('res===>', res);
+                  if (res.statusCode !== 200) {
+                    uni.showToast({
+                      icon: 'none',
+                      title: res.data.message,
+                      duration: 2000
+                    });
+                    resolve(res.data);
+                  } else {
+                    if (res.data.code !== 200) {
+                      if (res.data.code === 401) {
+                        // uni.navigateTo({
+                        // 	url: '/packageA/login/login'
+                        // })
+                      } else {
+                        uni.showToast({
+                          icon: 'none',
+                          title: res.data.msg,
+                          duration: 2000
+                        });
+                      }
+                    } else {
+                      resolve(res.data);
+                    }
+                    // 原样返回
+                    resolve({
+                      errno: 501
+                    });
+                  }
+                case 3:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee);
+        }));
+        function success(_x) {
+          return _success.apply(this, arguments);
+        }
+        return success;
+      }(),
+      fail: function fail(err) {
+        var str = '错误===>' + JSON.stringify(err);
+        uni.showToast({
+          icon: 'none',
+          title: str,
+          duration: 2000
+        });
+        // resolve({ errno: 1 });
+        resolve(err);
+      }
+    });
+  });
+}
+function requestFunForJson(method, url) {
+  var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var header = {
+    'content-type': 'application/json'
+    // 'User-Agent':'GenFee/3.1.9'
+    // 'Content-Type': 'application/x-www-form-urlencoded'
+  };
+
+  // 不需要传token的api路径，如"/app/auth/captcha"
+  var whiteList = ['/auth/login/wechat', '/topics'];
+  // 用户已登录时需要传token，没登录时不需要传token的api路径
+  var tokenList = [];
+  var index = url.indexOf('?'),
+    realUrl = url;
+  if (index >= 0) {
+    realUrl = url.substr(0, index);
+  }
+  if (whiteList.indexOf(realUrl) < 0 || tokenList.indexOf(realUrl) >= 0) {
+    var token = uni.getStorageSync('token') || '';
+    if (token) {
+      header['Authorization'] = token;
+    } else if (tokenList.indexOf(realUrl) < 0) {
+      // uni.navigateTo({
+      // 	url: '/packageA/login/login'
+      // })
+    }
+  }
+  return new Promise(function (resolve, reject) {
+    uni.request({
+      url: _config.default.baseUrl + url,
+      method: method,
+      header: Object.assign({}, header),
+      data: data,
+      success: function () {
+        var _success2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(res) {
+          return _regenerator.default.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  if (res.statusCode !== 200) {
+                    uni.showToast({
+                      icon: 'none',
+                      title: res.data.message,
+                      duration: 2000
+                    });
+                    resolve(res.data);
+                  } else {
+                    if (res.data.errno !== 0) {
+                      if (res.data.errno === 501) {
+                        // uni.navigateTo({
+                        // 	url: '/packageA/login/login'
+                        // })
+                      } else {
+                        uni.showToast({
+                          icon: 'none',
+                          title: res.data.errmsg,
+                          duration: 2000
+                        });
+                      }
+                    }
+                    // 原样返回
+                    resolve(res.data);
+                  }
+                case 1:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2);
+        }));
+        function success(_x2) {
+          return _success2.apply(this, arguments);
+        }
+        return success;
+      }(),
+      fail: function fail(err) {
+        uni.showToast({
+          icon: 'none',
+          title: JSON.stringify(err),
+          duration: 2000
+        });
+        resolve({
+          errno: 1
+        });
+      }
+    });
+  });
+}
+function goLogin() {
+  uni.navigateTo({
+    url: '/pages/login/login'
+  });
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 45 */
+/*!**************************************************************!*\
+  !*** /Users/umbush/project/worker-bee-mini/config/config.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  baseUrl: "http://dev.ggfee.cn/mini" //正式地址
+};
+exports.default = _default;
+
+/***/ }),
+/* 46 */
+/*!***********************************************************!*\
+  !*** /Users/umbush/project/worker-bee-mini/utils/tool.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni, wx) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.debounce = debounce;
+exports.downloadFile = downloadFile;
+exports.hasPermit = hasPermit;
+exports.parseTime = parseTime;
+exports.timeago = timeago;
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+// 日期格式化
+function parseTime(time, pattern) {
+  var noZero = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  if (arguments.length === 0 || !time) {
+    return null;
+  }
+  var format = pattern || '{y}-{m}-{d} {h}:{i}:{s}';
+  var date;
+  if ((0, _typeof2.default)(time) === 'object') {
+    date = time;
+  } else {
+    if (typeof time === 'string' && /^[0-9]+$/.test(time)) {
+      time = parseInt(time);
+    } else if (typeof time === 'string') {
+      time = time.replace(new RegExp(/-/gm), '/');
+    }
+    if (typeof time === 'number' && time.toString().length === 10) {
+      time = time * 1000;
+    }
+    date = new Date(time);
+  }
+  var year = date.getFullYear().toString();
+  var formatObj = {
+    Y: year,
+    y: year.substr(2, 4),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
+  };
+  var time_str = format.replace(/{(Y|y|m|d|h|i|s|a)+}/g, function (result, key) {
+    var value = formatObj[key];
+    // Note: getDay() returns 0 on Sunday
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value];
+    }
+    if (result.length > 0 && value < 10 && !noZero) {
+      value = '0' + value;
+    }
+    return value || 0;
+  });
+  return time_str;
+}
+
+// export function checkPhone(phone: string): boolean {
+//     if (!phone || !(/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone))) {
+//         return false;
+//     } else {
+//         return true;
+//     }
+// }
+
+/**
+ * @param {Function} fn 需要执行的方法，因this指向问题，建议不使用箭头函数，
+ * @param {Number} delay 间隔时间，默认值100
+ * @param {Boolean} promptly 是否立即执行，默认false
+ * **/
+function debounce(fn) {
+  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
+  var promptly = arguments.length > 2 ? arguments[2] : undefined;
+  var timer = null;
+  return function () {
+    var _this = this;
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    // 立即执行
+    if (promptly) {
+      // 当timer为null时执行
+      if (!timer) fn.apply(this, args);
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(function () {
+        timer = null;
+      }, delay);
+    } else {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(function () {
+        fn.apply(_this, args);
+      }, delay);
+    }
+  };
+}
+
+//dateTimeStamp是一个时间毫秒，注意时间戳是秒的形式，在这个毫秒的基础上除以1000，就是十位数的时间戳。13位数的都是时间毫秒。
+function timeago(dateTimeStamp) {
+  console.log('dateTimeStamp==》', dateTimeStamp);
+  var minute = 1000 * 60; //把分，时，天，周，半个月，一个月用毫秒表示
+  var hour = minute * 60;
+  var day = hour * 24;
+  var week = day * 7;
+  var halfamonth = day * 15;
+  var month = day * 30;
+  var now = new Date().getTime(); //获取当前时间毫秒
+  console.log(now);
+  var diffValue = now - dateTimeStamp; //时间差
+
+  if (diffValue < 0) {
+    return;
+  }
+  var minC = diffValue / minute; //计算时间差的分，时，天，周，月
+  var hourC = diffValue / hour;
+  var dayC = diffValue / day;
+  var weekC = diffValue / week;
+  var monthC = diffValue / month;
+  var result = null;
+  if (monthC >= 1 && monthC <= 3) {
+    result = " " + parseInt(monthC) + "月前";
+  } else if (weekC >= 1 && weekC <= 3) {
+    result = " " + parseInt(weekC) + "周前";
+  } else if (dayC >= 1 && dayC <= 6) {
+    result = " " + parseInt(dayC) + "天前";
+  } else if (hourC >= 1 && hourC <= 23) {
+    result = " " + parseInt(hourC) + "小时前";
+  } else if (minC >= 1 && minC <= 59) {
+    result = " " + parseInt(minC) + "分钟前";
+  } else if (diffValue >= 0 && diffValue <= minute) {
+    result = "刚刚";
+  } else {
+    var datetime = new Date();
+    datetime.setTime(dateTimeStamp);
+    var Nyear = datetime.getFullYear();
+    var Nmonth = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+    var Ndate = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+    var Nhour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+    var Nminute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+    var Nsecond = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+    result = Nyear + "-" + Nmonth + "-" + Ndate;
+  }
+  console.log('result==>', result);
+  return result;
+}
+
+/**
+ * @Description: 判断用户是否有操作权限
+ * @author lynnel
+ * @createTime: 2022-09-02 09:42:31
+ */
+// userPermits=['','']，needPermits=['','']
+function hasPermit() {
+  var userPermits = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var needPermits = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var result = needPermits && needPermits.length > 0 ? false : true;
+  if (!result && userPermits && userPermits.length > 0) {
+    for (var i = 0; i < userPermits.length; i++) {
+      if (needPermits.indexOf(userPermits[i]) !== -1) {
+        result = true;
+        break;
+      }
+    }
+  }
+  return result;
+}
+
+/**
+ * @Description: 附件下载
+ * @author lynnel
+ * @createTime: 2022-09-04 13:48:26
+ */
+function downloadFile(url, type) {
+  uni.showLoading({
+    title: '加载中'
+  });
+  uni.downloadFile({
+    url: url,
+    success: function success(res) {
+      if (res.statusCode === 200) {
+        wx.saveFile({
+          tempFilePath: res.tempFilePath,
+          success: function success(res) {
+            var savedFilePath = res.savedFilePath;
+            if (['image/png', 'image/jpeg'].indexOf(type) > -1) {
+              uni.previewImage({
+                urls: [savedFilePath],
+                success: function success() {
+                  console.log('打开图片成功');
+                },
+                fail: function fail(err) {
+                  console.log('err==>', err);
+                  uni.showToast({
+                    title: err.errMsg,
+                    icon: "none"
+                  });
+                }
+              });
+            } else {
+              console.log('12312321===>', url.substring(url.lastIndexOf(".") + 1));
+              // 打开文档
+              uni.openDocument({
+                fileType: url.substring(url.lastIndexOf(".") + 1),
+                filePath: savedFilePath,
+                success: function success(res) {
+                  console.log('打开文档成功');
+                },
+                fail: function fail(err) {
+                  console.log('err==>', err);
+                  uni.showToast({
+                    title: err.errMsg,
+                    icon: "none"
+                  });
+                }
+              });
+            }
+            uni.hideLoading();
+          }
+        });
+      }
+    }
+  });
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
+
 /***/ })
 ]]);
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

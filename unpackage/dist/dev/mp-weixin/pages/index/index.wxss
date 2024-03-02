@@ -24,6 +24,9 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.content.data-v-57280228 {
+  padding-bottom: 100rpx;
+}
 .content .navigater.data-v-57280228 {
   display: flex;
   align-items: center;
@@ -72,6 +75,13 @@
 .content .header .tabList .tab.data-v-57280228 {
   width: 48%;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.content .header .tabList .tab image.data-v-57280228 {
+  width: 63rpx;
+  height: 30rpx;
 }
 .content .header .tabList .tab1.data-v-57280228 {
   font-family: ZhenyanGB, ZhenyanGB;

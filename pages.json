@@ -17,7 +17,8 @@
 			"path": "pages/my/record",
 			"style": {
 				"navigationBarTitleText": "查看记录",
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true //开启上拉
 			}
 		}
 	],

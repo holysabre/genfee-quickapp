@@ -1,55 +1,64 @@
 <template>
 	<view class="content" :style="{ paddingTop: headTop + 'px' }">
+		<!-- #ifdef MP-WEIXIN -->
 		<view class="navigater" :style="{height: barHeight + 'px'}">
 			<image src="../../static/images/avatar.png" mode="" class="logo"></image>
 			<view class="title">
 				工蜂招工找活平台
 			</view>
 		</view>
+		<!-- #endif -->
+
 		<view class="header">
-			<view class="area">
+			<view class="area" @click="addressShow = true">
 				<text>浙江省</text>
 				<image src="../../static/images/more.png" mode=""></image>
 			</view>
 			<view class="tabList">
-				<view class="tab tab1" @click="tab=1">
-					<image src="../../static/images/tabFind.png" mode="" v-if="tab!=1"></image>
-					<image src="../../static/images/tabFindActive.png" mode="" v-if="tab==1"></image>
+				<view class="tab tab1" @click="changeTab(2)">
+					<image src="../../static/images/tabFind.png" mode="" v-if="tab!=2"></image>
+					<image src="../../static/images/tabFindActive.png" mode="" v-if="tab==2"></image>
 				</view>
 				<view class="line"></view>
-				<view class="tab tab2" @click="tab=2">
-					<image src="../../static/images/tabRecruit.png" mode="" v-if="tab!=2"></image>
-					<image src="../../static/images/tabRecruitActive.png" mode="" v-if="tab==2"></image>
+				<view class="tab tab2" @click="changeTab(1)">
+					<image src="../../static/images/tabRecruit.png" mode="" v-if="tab!=1"></image>
+					<image src="../../static/images/tabRecruitActive.png" mode="" v-if="tab==1"></image>
 				</view>
 			</view>
 			<image src="../../static/images/user.png" mode="" class="user" @click="toUser"></image>
 		</view>
 		<view class="list">
-			<view class="item" v-for="(item,index) in 13" :key="index">
+			<view class="item" v-for="(item,index) in list" :key="index">
 				<view class="top">
 					<view class="lBox">
-						<image src="../../static/images/find.png" mode="" v-if="tab===1"></image>
-						<image src="../../static/images/recruit.png" mode="" v-if="tab===2"></image>
-						<text>泥瓦工</text>
+						<image src="../../static/images/find.png" mode="" v-if="tab===2"></image>
+						<image src="../../static/images/recruit.png" mode="" v-if="tab===1"></image>
+						<text>{{item.category_name}}</text>
 					</view>
-					<view class="rBox">
+					<view class="rBox" @click="onPhone(item)">
 						<image src="../../static/images/phone.png" mode=""></image>
 						<text>立刻联系</text>
 					</view>
 				</view>
 				<view class="detail">
-					本人承接很多政府项目，项目想做长期的，而且稳定靠谱的，目前有长房的商业楼项目，万达的民主楼的项目在做，队伍想扩充，有兴趣的一起…
+					{{item.content}}
 				</view>
 				<view class="bot">
 					<image src="../../static/images/address.png" mode=""></image>
-					<text>浙江省宁波市鄞州区东吴镇</text>
+					<text>{{item.address}}</text>
 				</view>
 			</view>
 		</view>
+		<pickerAddress v-model="addressShow" @confirm="addresspick" v-if="addressShow" />
 	</view>
 </template>
 
 <script>
+	import {
+		getTopics,
+		addContact
+	} from "@/api/index.js"
+	import pickerAddress from '@/components/liudx-pickerAddress/index.vue'
 	export default {
 		data() {
 			return {
@@ -57,31 +66,114 @@
 				barHeight: 0,
 				windowHeight: 0,
 				headTop: 0,
-				tab: 1, //1:找活  2:招工
+				tab: 2, //1:招工,2:找活
+
+				page: 1,
+				pageTotal: -1,
+				list: [],
+
+
+				addressShow: false,
+				form: {
+					province: '',
+					city: '',
+					area: '',
+				},
+				address: ''
 			}
 		},
-
+		components: {
+			pickerAddress
+		},
+		onLoad() {
+			this.getList(false, true)
+		},
+		onPullDownRefresh() {
+			this.page = 1
+			this.getList(true, true)
+		},
+		onReachBottom() {
+			if (this.page < this.pageTotal) {
+				this.page += 1
+				this.getList(false, false)
+			}
+		},
 		onShow() {
 			// 计算页面尺寸
 			let sys = this.$beeMin.beesys();
 			console.log('sys===>', sys)
+			// #ifdef MP-WEIXIN
 			this.headTop = sys.top;
+			// #endif
 			this.headHeight = sys.height + 60;
 			this.windowHeight = sys.windowHeight;
 			this.barHeight = sys.barHeight
 		},
-		methods:{
-			toUser(){
+		methods: {
+			addresspick(obj) {
+				let arr = ['province', 'city', 'area'];
+				let place = '';
+				// arr.map(key => {
+				// 	this.form[key] = obj[key].AreaId
+				// 	place += obj[key].AreaName
+				// })
+				// this.address = place
+			},
+			toUser() {
 				uni.navigateTo({
-					url:'/pages/my/index'
+					url: '/pages/my/index'
 				})
 			},
-		}
+			//拨打电话
+			onPhone(item) {
+				addContact(item.user_id).then(res => {
+					console.log(res.data.data.mobile)
+					uni.makePhoneCall({
+						phoneNumber: res.data.data.mobile.toString(), //电话号码
+						success: function(e) {
+							console.log(e);
+						},
+						fail: function(e) {
+							console.log(e);
+
+						}
+					})
+				}).catch(err => {
+
+				})
+			},
+			changeTab(val) {
+				this.tab = val;
+				this.page = 1
+				this.getList(true, true)
+			},
+
+			async getList(refresh, replace) {
+				let res = await getTopics({
+					page: this.page,
+					per_page: 10,
+					party: this.tab
+				})
+				console.log('getList-res--->', res)
+				if (res.code === 200) {
+					let origin = this.list
+					if (replace) {
+						origin = []
+					}
+					this.list = origin.concat(res.data)
+					this.pageTotal = res.last_page
+				}
+				if (refresh) {
+					uni.stopPullDownRefresh()
+				}
+			}
+		},
 	}
 </script>
 
 <style lang="scss" scoped>
 	.content {
+		padding-bottom: 100rpx;
 
 		.navigater {
 			display: flex;

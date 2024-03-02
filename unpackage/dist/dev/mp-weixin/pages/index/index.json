@@ -2,5 +2,7 @@
   "navigationBarTitleText": "工蜂招工找活平台",
   "navigationStyle": "custom",
   "enablePullDownRefresh": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "picker-address": "/components/liudx-pickerAddress/index"
+  }
 }
