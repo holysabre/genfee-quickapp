@@ -11,7 +11,7 @@
 
 		<view class="header">
 			<view class="area" @click="addressShow = true">
-				<text>浙江省</text>
+				<text>{{address}}</text>
 				<image src="../../static/images/more.png" mode=""></image>
 			</view>
 			<view class="tabList">
@@ -27,7 +27,7 @@
 			</view>
 			<image src="../../static/images/user.png" mode="" class="user" @click="toUser"></image>
 		</view>
-		<view class="list">
+		<view class="list" v-if="list&&list.length>0">
 			<view class="item" v-for="(item,index) in list" :key="index">
 				<view class="top">
 					<view class="lBox">
@@ -47,6 +47,13 @@
 					<image src="../../static/images/address.png" mode=""></image>
 					<text>{{item.address}}</text>
 				</view>
+			</view>
+		</view>
+
+		<view class="empty" v-else>
+			<image src="../../static/images/empty.png" mode=""></image>
+			<view class="text">
+				暂无数据
 			</view>
 		</view>
 		<pickerAddress v-model="addressShow" @confirm="addresspick" v-if="addressShow" />
@@ -74,12 +81,10 @@
 
 
 				addressShow: false,
-				form: {
-					province: '',
-					city: '',
-					area: '',
-				},
-				address: ''
+				address: '宁波市',
+				provinceId: 0,
+				cityId: 0,
+				areaId: 0,
 			}
 		},
 		components: {
@@ -111,13 +116,13 @@
 		},
 		methods: {
 			addresspick(obj) {
-				let arr = ['province', 'city', 'area'];
-				let place = '';
-				// arr.map(key => {
-				// 	this.form[key] = obj[key].AreaId
-				// 	place += obj[key].AreaName
-				// })
-				// this.address = place
+				console.log('obj===>', obj)
+				this.provinceId = obj.province.id;
+				this.cityId = obj.city.id;
+				this.areaId = obj.area.id;
+				this.address = obj.area.name
+				this.page = 1
+				this.getList(true, true)
 			},
 			toUser() {
 				uni.navigateTo({
@@ -152,7 +157,8 @@
 				let res = await getTopics({
 					page: this.page,
 					per_page: 10,
-					party: this.tab
+					party: this.tab,
+					region_id: this.areaId
 				})
 				console.log('getList-res--->', res)
 				if (res.code === 200) {
@@ -346,5 +352,6 @@
 				}
 			}
 		}
+
 	}
 </style>

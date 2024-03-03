@@ -10156,9 +10156,12 @@ function requestFun(method, url) {
                   } else {
                     if (res.data.code !== 200) {
                       if (res.data.code === 401) {
-                        // uni.navigateTo({
-                        // 	url: '/packageA/login/login'
-                        // })
+                        uni.removeStorageSync('token');
+                        uni.showToast({
+                          icon: 'none',
+                          title: '请登录',
+                          duration: 2000
+                        });
                       } else {
                         uni.showToast({
                           icon: 'none',
@@ -10310,7 +10313,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _default = {
-  baseUrl: "http://dev.ggfee.cn/mini" //正式地址
+  // baseUrl: "http://dev.ggfee.cn/mini"//测试地址
+  baseUrl: "https://api.ggfee.cn/mini" //正式地址
 };
 exports.default = _default;
 

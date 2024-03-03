@@ -56,9 +56,12 @@ export function requestFun(method, url, data = {}) {
 				} else {
 					if (res.data.code !== 200) {
 						if (res.data.code === 401) {
-							// uni.navigateTo({
-							// 	url: '/packageA/login/login'
-							// })
+							uni.removeStorageSync('token')
+							uni.showToast({
+								icon: 'none',
+								title: '请登录',
+								duration: 2000
+							});
 						} else {
 							uni.showToast({
 								icon: 'none',

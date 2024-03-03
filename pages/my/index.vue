@@ -27,11 +27,13 @@
 					授权头像昵称
 				</view> -->
 				<!-- #ifdef MP-WEIXIN -->
-				<button class="btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">授权头像昵称</button>
+				<button class="btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumberForWeixin"
+					v-if="!token">授权头像昵称</button>
 				<!-- #endif -->
 
 				<!-- #ifdef MP-TOUTIAO -->
-				<button class="btn" data-eventsync="true" @click="douyinLogin">授权头像昵称</button>
+				<!-- <button class="btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumberForDouyin">授权头像昵称</button> -->
+				<button class="btn" data-eventsync="true" @click="douyinLogin" v-if="!token">授权头像昵称</button>
 				<!-- <view class="btn" @click="douyinLogin">
 					授权头像昵称
 				</view> -->
@@ -61,18 +63,20 @@
 				id: "",
 				avatar: "",
 				nickname: "",
-				douyinCode: ""
+				douyinCode: "",
+				token: ""
 			}
 		},
 		onLoad() {
 			this.getInfo()
+		},
+		onShow() {
+			this.token = uni.getStorageSync('token')
 			// #ifdef MP-TOUTIAO
 			if (!uni.getStorageSync('token')) {
 				this.checkLogin()
 			}
 			// #endif
-		},
-		onShow() {
 			// 计算页面尺寸
 			let sys = this.$beeMin.beesys();
 			console.log('sys===>', sys)
@@ -105,7 +109,7 @@
 			},
 			checkLogin() {
 				console.log('checkLogincheckLogin==>')
-				var that=this
+				var that = this
 				uni.login({
 					provider: 'weixin',
 					success: function(loginRes) {
@@ -117,7 +121,7 @@
 			douyinLogin() {
 				var that = this
 				console.log('douyinLogindouyinLogin')
-				if (!uni.getStorageSync('token')) {
+				if (!this.token) {
 					uni.getUserProfile({
 						desc: '獲取您的昵称、头像',
 						success: infoRes => {
@@ -132,9 +136,9 @@
 									console.log('loginByDouyin==>', res)
 									uni.setStorageSync('token', res.data.data
 										.token)
-									this.id = res.data.data.user.id;
-									this.avatar = res.data.data.user.avatar;
-									this.nickname = res.data.data.user.nickname;
+									that.id = res.data.data.user.id;
+									that.avatar = res.data.data.user.avatar;
+									that.nickname = res.data.data.user.nickname;
 									uni.showToast({
 										title: '登录成功',
 										icon: 'none'
@@ -162,9 +166,39 @@
 				}
 			},
 
+			//抖音授权手机号
+			getPhoneNumberForDouyin(e) {
+				console.log('e=====>', e)
+				let that = this
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						let dataPhone = {
+							code: loginRes.code, //uni.login获取到的code 和getPhoneNumber（e）中的code 是不一样的
+							encrypted_data: e.detail.encryptedData,
+							iv: e.detail.iv,
+						}
+						loginByDouyin(dataPhone).then((res) => {
+							console.log('loginByWeixin-res==>', res)
+							uni.setStorageSync('token', res.data.data.token)
+							that.id = res.data.data.user.id;
+							that.avatar = res.data.data.user.avatar;
+							that.nickname = res.data.data.user.nickname;
+							uni.showToast({
+								title: '登录成功',
+								icon: 'none'
+							})
+						}).catch(err => {
 
+						})
+						console.log('dataPhone===>', dataPhone)
+						//通过这些参数走后端接口获取手机号信息实现登录
+					}
+				});
+
+			},
 			//微信授权手机号
-			getPhoneNumber(e) {
+			getPhoneNumberForWeixin(e) {
 				let that = this
 				uni.login({
 					provider: 'weixin',
@@ -176,10 +210,11 @@
 						}
 						loginByWeixin(dataPhone).then((res) => {
 							console.log('loginByWeixin-res==>', res)
+							console.log('res.data.data==>', res.data.data)
 							uni.setStorageSync('token', res.data.data.token)
-							this.id = res.data.data.user.id;
-							this.avatar = res.data.data.user.avatar;
-							this.nickname = res.data.data.user.nickname;
+							that.id = res.data.data.user.id;
+							that.avatar = res.data.data.user.avatar;
+							that.nickname = res.data.data.user.nickname;
 							uni.showToast({
 								title: '登录成功',
 								icon: 'none'

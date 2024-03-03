@@ -8,7 +8,7 @@
 			</view>
 		</view>
 		<!-- #endif -->
-		<view class="list">
+		<view class="list" v-if="list&&list.length>0">
 			<view class="item" v-for="(item,index) in list" :key="index">
 				<view class="top">
 					<view class="lBox">
@@ -28,6 +28,12 @@
 					<image src="../../static/images/address.png" mode=""></image>
 					<text>{{item.topic.address}}</text>
 				</view>
+			</view>
+		</view>
+		<view class="empty" v-else>
+			<image src="../../static/images/empty.png" mode=""></image>
+			<view class="text">
+				暂无数据
 			</view>
 		</view>
 	</view>

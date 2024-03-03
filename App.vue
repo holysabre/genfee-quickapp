@@ -57,4 +57,22 @@
 	.navigater {
 		margin-bottom: 28rpx;
 	}
+	
+	
+	.empty {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height: 800rpx;
+		image {
+			width: 260rpx;
+			height: 260rpx;
+			margin-bottom: 20rpx;
+		}
+		.text{
+			font-size: 28rpx;
+			color: #333;
+		}
+	}
 </style>

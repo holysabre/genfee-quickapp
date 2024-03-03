@@ -102,11 +102,20 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var g0 = _vm.list && _vm.list.length > 0
   if (!_vm._isMounted) {
     _vm.e0 = function ($event) {
       _vm.addressShow = true
     }
   }
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        g0: g0,
+      },
+    }
+  )
 }
 var recyclableRender = false
 var staticRenderFns = []
@@ -205,6 +214,13 @@ var _index = __webpack_require__(/*! @/api/index.js */ 43);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 var pickerAddress = function pickerAddress() {
   __webpack_require__.e(/*! require.ensure | components/liudx-pickerAddress/index */ "components/liudx-pickerAddress/index").then((function () {
     return resolve(__webpack_require__(/*! @/components/liudx-pickerAddress/index.vue */ 65));
@@ -224,12 +240,10 @@ var _default = {
       pageTotal: -1,
       list: [],
       addressShow: false,
-      form: {
-        province: '',
-        city: '',
-        area: ''
-      },
-      address: ''
+      address: '宁波市',
+      provinceId: 0,
+      cityId: 0,
+      areaId: 0
     };
   },
   components: {
@@ -259,13 +273,13 @@ var _default = {
   },
   methods: {
     addresspick: function addresspick(obj) {
-      var arr = ['province', 'city', 'area'];
-      var place = '';
-      // arr.map(key => {
-      // 	this.form[key] = obj[key].AreaId
-      // 	place += obj[key].AreaName
-      // })
-      // this.address = place
+      console.log('obj===>', obj);
+      this.provinceId = obj.province.id;
+      this.cityId = obj.city.id;
+      this.areaId = obj.area.id;
+      this.address = obj.area.name;
+      this.page = 1;
+      this.getList(true, true);
     },
     toUser: function toUser() {
       uni.navigateTo({
@@ -305,7 +319,8 @@ var _default = {
                 return (0, _index.getTopics)({
                   page: _this.page,
                   per_page: 10,
-                  party: _this.tab
+                  party: _this.tab,
+                  region_id: _this.areaId
                 });
               case 2:
                 res = _context.sent;

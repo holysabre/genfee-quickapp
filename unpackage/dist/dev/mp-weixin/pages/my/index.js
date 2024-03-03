@@ -189,6 +189,8 @@ var _index = __webpack_require__(/*! @/api/index.js */ 43);
 //
 //
 //
+//
+//
 var _default = {
   data: function data() {
     return {
@@ -199,13 +201,16 @@ var _default = {
       id: "",
       avatar: "",
       nickname: "",
-      douyinCode: ""
+      douyinCode: "",
+      token: ""
     };
   },
   onLoad: function onLoad() {
     this.getInfo();
   },
   onShow: function onShow() {
+    this.token = uni.getStorageSync('token');
+
     // 计算页面尺寸
     var sys = this.$beeMin.beesys();
     console.log('sys===>', sys);
@@ -247,10 +252,9 @@ var _default = {
       });
     },
     douyinLogin: function douyinLogin() {
-      var _this2 = this;
       var that = this;
       console.log('douyinLogindouyinLogin');
-      if (!uni.getStorageSync('token')) {
+      if (!this.token) {
         uni.getUserProfile({
           desc: '獲取您的昵称、头像',
           success: function success(infoRes) {
@@ -264,9 +268,9 @@ var _default = {
               (0, _index.loginByDouyin)(dataPhone).then(function (res) {
                 console.log('loginByDouyin==>', res);
                 uni.setStorageSync('token', res.data.data.token);
-                _this2.id = res.data.data.user.id;
-                _this2.avatar = res.data.data.user.avatar;
-                _this2.nickname = res.data.data.user.nickname;
+                that.id = res.data.data.user.id;
+                that.avatar = res.data.data.user.avatar;
+                that.nickname = res.data.data.user.nickname;
                 uni.showToast({
                   title: '登录成功',
                   icon: 'none'
@@ -290,13 +294,41 @@ var _default = {
         // });
       }
     },
-    //微信授权手机号
-    getPhoneNumber: function getPhoneNumber(e) {
+    //抖音授权手机号
+    getPhoneNumberForDouyin: function getPhoneNumberForDouyin(e) {
+      console.log('e=====>', e);
       var that = this;
       uni.login({
         provider: 'weixin',
         success: function success(loginRes) {
-          var _this3 = this;
+          var dataPhone = {
+            code: loginRes.code,
+            //uni.login获取到的code 和getPhoneNumber（e）中的code 是不一样的
+            encrypted_data: e.detail.encryptedData,
+            iv: e.detail.iv
+          };
+          (0, _index.loginByDouyin)(dataPhone).then(function (res) {
+            console.log('loginByWeixin-res==>', res);
+            uni.setStorageSync('token', res.data.data.token);
+            that.id = res.data.data.user.id;
+            that.avatar = res.data.data.user.avatar;
+            that.nickname = res.data.data.user.nickname;
+            uni.showToast({
+              title: '登录成功',
+              icon: 'none'
+            });
+          }).catch(function (err) {});
+          console.log('dataPhone===>', dataPhone);
+          //通过这些参数走后端接口获取手机号信息实现登录
+        }
+      });
+    },
+    //微信授权手机号
+    getPhoneNumberForWeixin: function getPhoneNumberForWeixin(e) {
+      var that = this;
+      uni.login({
+        provider: 'weixin',
+        success: function success(loginRes) {
           var dataPhone = {
             code: loginRes.code,
             //uni.login获取到的code 和getPhoneNumber（e）中的code 是不一样的
@@ -305,10 +337,11 @@ var _default = {
           };
           (0, _index.loginByWeixin)(dataPhone).then(function (res) {
             console.log('loginByWeixin-res==>', res);
+            console.log('res.data.data==>', res.data.data);
             uni.setStorageSync('token', res.data.data.token);
-            _this3.id = res.data.data.user.id;
-            _this3.avatar = res.data.data.user.avatar;
-            _this3.nickname = res.data.data.user.nickname;
+            that.id = res.data.data.user.id;
+            that.avatar = res.data.data.user.avatar;
+            that.nickname = res.data.data.user.nickname;
             uni.showToast({
               title: '登录成功',
               icon: 'none'
