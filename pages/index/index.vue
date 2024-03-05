@@ -1,31 +1,32 @@
 <template>
-	<view class="content" :style="{paddingTop:  barHeight+headTop + 'px'}">
-		<!-- #ifdef MP-WEIXIN -->
-		<view class="navigater" :style="{height: barHeight+headTop + 'px',paddingTop: headTop + 'px'}">
-			<image src="../../static/images/avatar.png" mode="" class="logo"></image>
-			<view class="title">
-				工蜂招工找活平台
-			</view>
-		</view>
-		<!-- #endif -->
-
-		<view class="header">
-			<view class="area" @click="addressShow = true">
-				<text>{{address}}</text>
-				<image src="../../static/images/more.png" mode=""></image>
-			</view>
-			<view class="tabList">
-				<view class="tab tab1" @click="changeTab(2)">
-					<image src="../../static/images/tabFind.png" mode="" v-if="tab!=2"></image>
-					<image src="../../static/images/tabFindActive.png" mode="" v-if="tab==2"></image>
-				</view>
-				<view class="line"></view>
-				<view class="tab tab2" @click="changeTab(1)">
-					<image src="../../static/images/tabRecruit.png" mode="" v-if="tab!=1"></image>
-					<image src="../../static/images/tabRecruitActive.png" mode="" v-if="tab==1"></image>
+	<view class="content" :style="{paddingTop: barHeight+headTop+ 50 + 'px'}">
+		<view class="headTop">
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="navigater" :style="{height: barHeight+headTop + 'px',paddingTop: headTop + 'px'}">
+				<image src="../../static/images/avatar.png" mode="" class="logo"></image>
+				<view class="title">
+					工蜂招工找活平台
 				</view>
 			</view>
-			<image src="../../static/images/user.png" mode="" class="user" @click="toUser"></image>
+			<!-- #endif -->
+			<view class="header">
+				<view class="area" @click="addressShow = true">
+					<text>{{address}}</text>
+					<image src="../../static/images/more.png" mode=""></image>
+				</view>
+				<view class="tabList">
+					<view class="tab tab1" @click="changeTab(2)">
+						<image src="../../static/images/tabFind.png" mode="" v-if="tab!=2"></image>
+						<image src="../../static/images/tabFindActive.png" mode="" v-if="tab==2"></image>
+					</view>
+					<view class="line"></view>
+					<view class="tab tab2" @click="changeTab(1)">
+						<image src="../../static/images/tabRecruit.png" mode="" v-if="tab!=1"></image>
+						<image src="../../static/images/tabRecruitActive.png" mode="" v-if="tab==1"></image>
+					</view>
+				</view>
+				<image src="../../static/images/user.png" mode="" class="user" @click="toUser"></image>
+			</view>
 		</view>
 		<view class="list" v-if="list&&list.length>0">
 			<view class="item" v-for="(item,index) in list" :key="index">
@@ -192,16 +193,20 @@
 	.content {
 		padding-bottom: 100rpx;
 
-		.navigater {
-			display: flex;
-			align-items: center;
-			padding: 0 20rpx;
+		.headTop {
+
 			width: 100%;
 			position: fixed;
 			top: 0;
 			left: 0;
 			background-color: #FFE37B;
 			z-index: 999;
+		}
+
+		.navigater {
+			display: flex;
+			align-items: center;
+			padding: 0 20rpx;
 
 			.logo {
 				width: 60rpx;
