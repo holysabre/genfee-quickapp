@@ -49,7 +49,7 @@ export function requestFun(method, url, data = {}) {
 				if (res.statusCode !== 200) {
 					uni.showToast({
 						icon: 'none',
-						title: res.data.message,
+						title: res.data.msg,
 						duration: 2000
 					});
 					resolve(res.data);
@@ -93,77 +93,35 @@ export function requestFun(method, url, data = {}) {
 }
 
 
-
-export function requestFunForJson(method, url, data = {}) {
+// 上传文件
+export function uploadFilePath(filePath) {
 	let header = {
-		'content-type': 'application/json',
-		// 'User-Agent':'GenFee/3.1.9'
-		// 'Content-Type': 'application/x-www-form-urlencoded'
 	}
-
-	// 不需要传token的api路径，如"/app/auth/captcha"
-	let whiteList = [
-		'/auth/login/wechat', '/topics',
-	];
-	// 用户已登录时需要传token，没登录时不需要传token的api路径
-	let tokenList = [];
-	let index = url.indexOf('?'),
-		realUrl = url
-	if (index >= 0) {
-		realUrl = url.substr(0, index)
+	let token = uni.getStorageSync('token') || ''
+	if (token) {
+		header['Authorization'] = token
 	}
-	if (whiteList.indexOf(realUrl) < 0 || tokenList.indexOf(realUrl) >= 0) {
-		let token = uni.getStorageSync('token') || ''
-		if (token) {
-			header['Authorization'] = token
-		} else if (tokenList.indexOf(realUrl) < 0) {
-			// uni.navigateTo({
-			// 	url: '/packageA/login/login'
-			// })
-		}
-	}
-
 	return new Promise((resolve, reject) => {
-		uni.request({
-			url: defaultConfig.baseUrl + url,
-			method: method,
+		uni.uploadFile({
+			url: defaultConfig.baseUrl + '/tools/upload',
+			filePath,
 			header: Object.assign({}, header),
-			data,
-			success: async (res) => {
-				if (res.statusCode !== 200) {
-					uni.showToast({
-						icon: 'none',
-						title: res.data.message,
-						duration: 2000
-					});
-					resolve(res.data);
-				} else {
-					if (res.data.errno !== 0) {
-						if (res.data.errno === 501) {
-							// uni.navigateTo({
-							// 	url: '/packageA/login/login'
-							// })
-						} else {
-							uni.showToast({
-								icon: 'none',
-								title: res.data.errmsg,
-								duration: 2000
-							});
-						}
+			name: 'file',
+			complete(res) {
+				if (res.statusCode === 200) {
+					let data = JSON.parse(res.data)
+					if (data.code !== 200) {
+						uni.showToast({
+							icon: 'none',
+							title: res.data.msg,
+							duration: 2000
+						});
 					}
-					// 原样返回
-					resolve(res.data);
+					resolve(data)
+				} else {
+					// resolve({ errno: 1 })
+					resolve(res)
 				}
-			},
-			fail(err) {
-				uni.showToast({
-					icon: 'none',
-					title: JSON.stringify(err),
-					duration: 2000
-				});
-				resolve({
-					errno: 1
-				});
 			}
 		})
 	})

@@ -1,7 +1,7 @@
 <template>
-	<view class="content" :style="{ paddingTop: headTop + 'px' }">
+	<view class="content" :style="{paddingTop:  barHeight+headTop + 'px'}">
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="navigater" :style="{height: barHeight + 'px'}">
+		<view class="navigater" :style="{height: barHeight+headTop + 'px',paddingTop: headTop + 'px'}">
 			<image src="../../static/images/avatar.png" mode="" class="logo"></image>
 			<view class="title">
 				工蜂招工找活平台
@@ -45,7 +45,7 @@
 				</view>
 				<view class="bot">
 					<image src="../../static/images/address.png" mode=""></image>
-					<text>{{item.address}}</text>
+					<text class="omit1">{{item.address}}</text>
 				</view>
 			</view>
 		</view>
@@ -133,19 +133,35 @@
 			onPhone(item) {
 				addContact(item.user_id).then(res => {
 					console.log(res.data.data.mobile)
-					uni.makePhoneCall({
-						phoneNumber: res.data.data.mobile.toString(), //电话号码
-						success: function(e) {
-							console.log(e);
-						},
-						fail: function(e) {
-							console.log(e);
+					let isReal = uni.getStorageSync('is_realname')
+					if (isReal == 1) {
+						uni.makePhoneCall({
+							phoneNumber: res.data.data.mobile.toString(), //电话号码
+							success: function(e) {
+								console.log(e);
+							},
+							fail: function(e) {
+								console.log(e);
+							}
+						})
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '联系用户需在实名之后才能使用',
+							cancelText: '取消',
+							confirmText: '去实名',
+							success: async res2 => {
+								if (res2.confirm) {
+									uni.navigateTo({
+										url: '/pages/approve'
+									})
+								}
+							},
 
-						}
-					})
-				}).catch(err => {
+						});
+					}
 
-				})
+				}).catch(err => {})
 			},
 			changeTab(val) {
 				this.tab = val;
@@ -185,6 +201,12 @@
 			display: flex;
 			align-items: center;
 			padding: 0 20rpx;
+			width: 100%;
+			position: fixed;
+			top: 0;
+			left: 0;
+			background-color: #FFE37B;
+			z-index: 999;
 
 			.logo {
 				width: 60rpx;
@@ -300,6 +322,7 @@
 						text {
 							font-size: 36rpx;
 							color: #222222;
+							font-weight: 600;
 						}
 
 					}
@@ -348,6 +371,7 @@
 						font-size: 24rpx;
 						color: rgba(34, 34, 34, 0.3);
 						line-height: 38rpx;
+						width: calc(100% - 30rpx);
 					}
 				}
 			}

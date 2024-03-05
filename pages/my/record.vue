@@ -133,7 +133,6 @@
 		.navigater {
 			display: flex;
 			align-items: center;
-			padding: 0 20rpx;
 			position: sticky;
 			z-index: 99;
 			background-color: #FFE37B;
@@ -180,6 +179,7 @@
 						text {
 							font-size: 36rpx;
 							color: #222222;
+							font-weight: 600;
 						}
 
 					}

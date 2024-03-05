@@ -16,7 +16,7 @@
 					<image src="../../static/images/avatar.png" mode="" class="avatar" v-else></image>
 					<view class="rBox">
 						<view class="name">
-							{{nickname||'暂无'}}
+							{{nickname||'未登录'}}
 						</view>
 						<view class="uuid">
 							ID：{{id}}
@@ -39,10 +39,10 @@
 				</view> -->
 				<!-- #endif -->
 			</view>
-			<view class="bot" @click="toRecord">
+			<!-- <view class="bot" @click="toRecord">
 				<text>查看记录</text>
 				<image src="../../static/images/extend.png" mode=""></image>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -96,6 +96,8 @@
 			getInfo() {
 				getUserInfo().then(res => {
 					if (res.data.data.id) {
+						uni.setStorageSync('is_realname', res.data.data
+							.is_realname_authenticated)
 						this.id = res.data.data.id;
 						this.avatar = res.data.data.avatar;
 						this.nickname = res.data.data.nickname;
@@ -136,6 +138,8 @@
 									console.log('loginByDouyin==>', res)
 									uni.setStorageSync('token', res.data.data
 										.token)
+									uni.setStorageSync('is_realname', res.data.data.user
+										.is_realname_authenticated)
 									that.id = res.data.data.user.id;
 									that.avatar = res.data.data.user.avatar;
 									that.nickname = res.data.data.user.nickname;
@@ -181,6 +185,8 @@
 						loginByDouyin(dataPhone).then((res) => {
 							console.log('loginByWeixin-res==>', res)
 							uni.setStorageSync('token', res.data.data.token)
+							uni.setStorageSync('is_realname', res.data.data.user
+								.is_realname_authenticated)
 							that.id = res.data.data.user.id;
 							that.avatar = res.data.data.user.avatar;
 							that.nickname = res.data.data.user.nickname;
@@ -212,6 +218,8 @@
 							console.log('loginByWeixin-res==>', res)
 							console.log('res.data.data==>', res.data.data)
 							uni.setStorageSync('token', res.data.data.token)
+							uni.setStorageSync('is_realname', res.data.data.user
+								.is_realname_authenticated)
 							that.id = res.data.data.user.id;
 							that.avatar = res.data.data.user.avatar;
 							that.nickname = res.data.data.user.nickname;
@@ -241,7 +249,6 @@
 		.navigater {
 			display: flex;
 			align-items: center;
-			padding: 0 20rpx;
 
 			.icon {
 				width: 60rpx;
@@ -260,12 +267,12 @@
 		.main {
 			background-color: white;
 			border-radius: 16rpx;
-			padding: 20rpx 20rpx 40rpx 20rpx;
+			padding: 20rpx;
 
 			.top {
 				display: flex;
 				justify-content: space-between;
-				margin-bottom: 45rpx;
+				// margin-bottom: 45rpx;
 
 				.info {
 					display: flex;

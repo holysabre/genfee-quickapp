@@ -20,6 +20,14 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true //开启上拉
 			}
+		}, {
+			"path": "pages/approve",
+			"style": {
+				"navigationBarTitleText": "实名认证",
+				"enablePullDownRefresh": true, //开启上拉
+				"navigationBarBackgroundColor": "#ffffff", //导航条颜色//2330e5蓝
+				"backgroundColor": "#ffffff" //页面颜色
+			}
 		}
 	],
 	/* 全局页面样式 */

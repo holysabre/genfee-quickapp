@@ -36,3 +36,8 @@ export const addContact = (contact_id) => {
 export const getContactHistory = () => {
 	return requestFun('get', `/users/contact_history`)
 }
+
+// 个人认证
+export const getIdentify = (params) => {
+	return requestFun('post', `/users/identify/personal`,params)
+}
