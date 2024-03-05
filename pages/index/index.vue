@@ -113,6 +113,10 @@
 			this.headHeight = sys.height + 60;
 			this.windowHeight = sys.windowHeight;
 			this.barHeight = sys.barHeight
+
+			// #ifdef MP-TOUTIAO
+			this.barHeight = 0
+			// #endif
 		},
 		methods: {
 			addresspick(obj) {
@@ -132,19 +136,8 @@
 			//拨打电话
 			onPhone(item) {
 				addContact(item.user_id).then(res => {
-					console.log(res.data.data.mobile)
-					let isReal = uni.getStorageSync('is_realname')
-					if (isReal == 1) {
-						uni.makePhoneCall({
-							phoneNumber: res.data.data.mobile.toString(), //电话号码
-							success: function(e) {
-								console.log(e);
-							},
-							fail: function(e) {
-								console.log(e);
-							}
-						})
-					} else {
+					console.log(res)
+					if (res.code == 40010) {
 						uni.showModal({
 							title: '提示',
 							content: '联系用户需在实名之后才能使用',
@@ -159,7 +152,9 @@
 							},
 
 						});
+						return
 					}
+
 
 				}).catch(err => {})
 			},

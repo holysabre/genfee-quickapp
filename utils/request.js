@@ -62,6 +62,8 @@ export function requestFun(method, url, data = {}) {
 								title: '请登录',
 								duration: 2000
 							});
+						} else if (res.data.code === 40010) {
+							resolve(res.data)
 						} else {
 							uni.showToast({
 								icon: 'none',
@@ -69,13 +71,14 @@ export function requestFun(method, url, data = {}) {
 								duration: 2000
 							});
 						}
+						resolve(res.data)
 					} else {
 						resolve(res.data);
 					}
 					// 原样返回
-					resolve({
-						errno: 501
-					});
+					// resolve({
+					// 	errno: 501
+					// });
 				}
 			},
 			fail: (err) => {
@@ -95,8 +98,7 @@ export function requestFun(method, url, data = {}) {
 
 // 上传文件
 export function uploadFilePath(filePath) {
-	let header = {
-	}
+	let header = {}
 	let token = uni.getStorageSync('token') || ''
 	if (token) {
 		header['Authorization'] = token
@@ -116,6 +118,7 @@ export function uploadFilePath(filePath) {
 							title: res.data.msg,
 							duration: 2000
 						});
+						resolve(res)
 					}
 					resolve(data)
 				} else {

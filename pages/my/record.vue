@@ -67,6 +67,9 @@
 			this.headHeight = sys.height + 60;
 			this.windowHeight = sys.windowHeight;
 			this.barHeight = sys.barHeight
+			// #ifdef MP-TOUTIAO
+			this.barHeight = 0
+			// #endif
 		},
 		onLoad() {
 			this.getList(false, true)
