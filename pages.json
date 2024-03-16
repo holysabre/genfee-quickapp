@@ -8,6 +8,14 @@
 				"enablePullDownRefresh": true //开启上拉
 			}
 		}, {
+			"path": "pages/index/detail",
+			"style": {
+				"navigationBarTitleText": "内容详情",
+				"navigationBarBackgroundColor": "#ffffff",
+				"backgroundColor": "#ffffff", //页面颜色
+				"enablePullDownRefresh": true //开启上拉
+			}
+		}, {
 			"path": "pages/my/index",
 			"style": {
 				"navigationBarTitleText": "我的",

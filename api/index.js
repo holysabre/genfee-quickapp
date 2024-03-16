@@ -17,6 +17,11 @@ export const getTopics = (params) => {
 	return requestFun('get', '/topics', params)
 }
 
+// 获得话题详情
+export const getTopicsDetail = (tId) => {
+	return requestFun('get', `/topics/${tId}`)
+}
+
 // 我的
 export const getUserInfo = () => {
 	return requestFun('get', `/users/mine`)
@@ -39,5 +44,5 @@ export const getContactHistory = () => {
 
 // 个人认证
 export const getIdentify = (params) => {
-	return requestFun('post', `/users/identify/personal`,params)
+	return requestFun('post', `/users/identify/personal`, params)
 }

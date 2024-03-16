@@ -1,10 +1,7 @@
 <template>
 	<view class="approve">
 		<view class="title">
-			请扫描身份证的正反面
-		</view>
-		<view class="note">
-			正面为头像面，反面为国徽面
+			请上传身份证
 		</view>
 		<view class="haed" @click="choosePic">
 			<view class="info">
@@ -20,7 +17,7 @@
 		</view>
 
 		<view class="btn" @click="onSubmit">
-			提交申请
+			提交
 		</view>
 	</view>
 </template>
@@ -89,7 +86,8 @@
 		.title {
 			color: #222222;
 			font-size: 32rpx;
-			margin-bottom: 24rpx;
+			margin-bottom: 36rpx;
+			font-weight: 600;
 		}
 
 		.note {
@@ -106,7 +104,7 @@
 			padding: 18rpx 16rpx 18rpx 24rpx;
 			display: flex;
 			justify-content: space-between;
-			margin-bottom: 148rpx;
+			margin-bottom: 60rpx;
 
 			.info {
 				padding-top: 22rpx;

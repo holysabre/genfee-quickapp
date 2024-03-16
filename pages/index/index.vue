@@ -29,24 +29,38 @@
 			</view>
 		</view>
 		<view class="list" v-if="list&&list.length>0">
-			<view class="item" v-for="(item,index) in list" :key="index">
+			<view class="item" v-for="(item,index) in list" :key="index" @click="changeItem(item)">
 				<view class="top">
 					<view class="lBox">
 						<image src="../../static/images/find.png" mode="" v-if="tab===2"></image>
 						<image src="../../static/images/recruit.png" mode="" v-if="tab===1"></image>
 						<text>{{item.category_name}}</text>
 					</view>
-					<view class="rBox" @click="onPhone(item)">
-						<image src="../../static/images/phone.png" mode=""></image>
-						<text>立刻联系</text>
+
+					<view class="salary ">
+						{{item.salary}}
 					</view>
 				</view>
 				<view class="detail">
 					{{item.content}}
 				</view>
+				<view class="company">
+					{{item.company_name||''}}
+					<!-- item.company_nameitem.company_nameitem.company_name -->
+				</view>
 				<view class="bot">
-					<image src="../../static/images/address.png" mode=""></image>
-					<text class="omit1">{{item.address}}</text>
+					<view class="lBox">
+
+						<view class="address">
+							<image src="../../static/images/address.png" mode=""></image>
+							<text class="omit1">{{item.address}}</text>
+						</view>
+					</view>
+
+					<view class="rBox" @click.stop="onPhone(item)">
+						<image src="../../static/images/phone.png" mode=""></image>
+						<text>立刻联系</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -82,7 +96,7 @@
 
 
 				addressShow: false,
-				address: '宁波市',
+				address: '全国',
 				provinceId: 0,
 				cityId: 0,
 				areaId: 0,
@@ -140,10 +154,10 @@
 					console.log(res)
 					if (res.code == 40010) {
 						uni.showModal({
-							title: '提示',
-							content: '联系用户需在实名之后才能使用',
+							title: '温馨提示',
+							content: '联系对方前需要您完成实名认证。',
 							cancelText: '取消',
-							confirmText: '去实名',
+							confirmText: '立即认证',
 							success: async res2 => {
 								if (res2.confirm) {
 									uni.navigateTo({
@@ -156,7 +170,16 @@
 						return
 					}
 
+					uni.makePhoneCall({
+						phoneNumber: res.data.data.mobile.toString(), //电话号码
+						success: function(e) {
+							console.log(e);
+						},
+						fail: function(e) {
+							console.log(e);
 
+						}
+					})
 				}).catch(err => {})
 			},
 			changeTab(val) {
@@ -164,7 +187,12 @@
 				this.page = 1
 				this.getList(true, true)
 			},
-
+			changeItem(item) {
+				console.log('item===>', item)
+				uni.navigateTo({
+					url: '/pages/index/detail?id=' + item.id
+				})
+			},
 			async getList(refresh, replace) {
 				let res = await getTopics({
 					page: this.page,
@@ -226,8 +254,9 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			margin-bottom: 8rpx;
+			// margin-bottom: 8rpx;
 			padding: 0 20rpx;
+			position: relative;
 
 			.area {
 				display: flex;
@@ -249,10 +278,18 @@
 				width: 354rpx;
 				height: 48rpx;
 				background: #FFFFFF;
-				border-radius: 24rpx 24rpx 24rpx 24rpx;
+				border-radius: 24rpx;
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+				// margin-left: 75rpx;
+				// margin-right: 130rpx;
 
 				.tab {
 					width: 48%;
@@ -324,8 +361,28 @@
 							color: #222222;
 							font-weight: 600;
 						}
-
 					}
+
+					.salary {
+						font-weight: 600;
+						font-size: 24rpx;
+						color: #FD7272;
+					}
+				}
+
+				.detail {
+					margin-bottom: 20rpx;
+					font-size: 28rpx;
+					color: #222222;
+					line-height: 38rpx;
+					word-break: break-all;
+					word-wrap: break-word;
+				}
+
+				.bot {
+					display: flex;
+					justify-content: space-between;
+					align-items: flex-end;
 
 					.rBox {
 						display: flex;
@@ -350,14 +407,16 @@
 					}
 				}
 
-				.detail {
-					margin-bottom: 20rpx;
-					font-size: 28rpx;
-					color: #222222;
-					line-height: 38rpx;
+				.company {
+					width: 100%;
+					margin-bottom: 15rpx;
+					font-size: 24rpx;
+					color: rgba(34, 34, 34, 0.3);
+					word-break: break-all;
+					word-wrap: break-word;
 				}
 
-				.bot {
+				.address {
 					display: flex;
 					align-items: center;
 

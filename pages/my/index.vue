@@ -71,7 +71,7 @@
 			this.getInfo()
 		},
 		onShow() {
-			this.token = uni.getStorageSync('token')
+			this.token = uni.getStorageSync('token') || ''
 			// #ifdef MP-TOUTIAO
 			if (!uni.getStorageSync('token')) {
 				this.checkLogin()
@@ -86,8 +86,8 @@
 			this.headHeight = sys.height + 60;
 			this.windowHeight = sys.windowHeight;
 			this.barHeight = sys.barHeight
-			 
-			 // #ifdef MP-TOUTIAO
+
+			// #ifdef MP-TOUTIAO
 			this.barHeight = 0
 			// #endif
 		},
@@ -144,6 +144,7 @@
 										.token)
 									uni.setStorageSync('is_realname', res.data.data.user
 										.is_realname_authenticated)
+									that.token = res.data.data.token
 									that.id = res.data.data.user.id;
 									that.avatar = res.data.data.user.avatar;
 									that.nickname = res.data.data.user.nickname;
@@ -191,6 +192,7 @@
 							uni.setStorageSync('token', res.data.data.token)
 							uni.setStorageSync('is_realname', res.data.data.user
 								.is_realname_authenticated)
+							that.token = res.data.data.token
 							that.id = res.data.data.user.id;
 							that.avatar = res.data.data.user.avatar;
 							that.nickname = res.data.data.user.nickname;
@@ -224,6 +226,7 @@
 							uni.setStorageSync('token', res.data.data.token)
 							uni.setStorageSync('is_realname', res.data.data.user
 								.is_realname_authenticated)
+							that.token = res.data.data.token
 							that.id = res.data.data.user.id;
 							that.avatar = res.data.data.user.avatar;
 							that.nickname = res.data.data.user.nickname;
