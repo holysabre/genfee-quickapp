@@ -5,7 +5,7 @@
 			"style": {
 				"navigationBarTitleText": "工蜂招工找活平台",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": true //开启上拉
+				"enablePullDownRefresh": true //开启下拉
 			}
 		}, {
 			"path": "pages/index/detail",
@@ -13,7 +13,7 @@
 				"navigationBarTitleText": "内容详情",
 				"navigationBarBackgroundColor": "#ffffff",
 				"backgroundColor": "#ffffff", //页面颜色
-				"enablePullDownRefresh": true //开启上拉
+				"enablePullDownRefresh": true //开启下拉
 			}
 		}, {
 			"path": "pages/my/index",
@@ -26,13 +26,13 @@
 			"style": {
 				"navigationBarTitleText": "查看记录",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": true //开启上拉
+				"enablePullDownRefresh": true //开启下拉
 			}
 		}, {
 			"path": "pages/approve",
 			"style": {
 				"navigationBarTitleText": "实名认证",
-				"enablePullDownRefresh": true, //开启上拉
+				"enablePullDownRefresh": true, //开启下拉
 				"navigationBarBackgroundColor": "#ffffff", //导航条颜色//2330e5蓝
 				"backgroundColor": "#ffffff" //页面颜色
 			}
