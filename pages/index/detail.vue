@@ -38,7 +38,7 @@
 			</view>
 		</view>
 
-		<view class="form-item form-item2">
+		<view class="form-item form-item2" v-if="info.party!=2">
 			<view class="label">
 				薪酬范围：
 			</view>
@@ -46,7 +46,7 @@
 				{{info.salary||'暂无'}}
 			</view>
 		</view>
-		<view class="form-item form-item2">
+		<view class="form-item form-item2" v-if="info.party!=2">
 			<view class="label">
 				企业单位：
 			</view>
@@ -164,6 +164,7 @@
 				flex-wrap: wrap;
 				align-items: center;
 				margin-right: -20rpx;
+				margin-bottom: -20rpx;
 				max-width: 550rpx;
 
 				.tag {
