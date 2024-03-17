@@ -14,7 +14,7 @@
 					<text>{{address}}</text>
 					<image src="../../static/images/more.png" mode=""></image>
 				</view>
-				<view class="tabList">
+				<!-- <view class="tabList">
 					<view class="tab tab1" @click="changeTab(2)">
 						<image src="../../static/images/tabFind.png" mode="" v-if="tab!=2"></image>
 						<image src="../../static/images/tabFindActive.png" mode="" v-if="tab==2"></image>
@@ -24,6 +24,10 @@
 						<image src="../../static/images/tabRecruit.png" mode="" v-if="tab!=1"></image>
 						<image src="../../static/images/tabRecruitActive.png" mode="" v-if="tab==1"></image>
 					</view>
+				</view> -->
+
+				<view class="tabs">
+					<image src="../../static/images/zzrz.png" mode=""></image>
 				</view>
 				<image src="../../static/images/user.png" mode="" class="user" @click="toUser"></image>
 			</view>
@@ -88,7 +92,7 @@
 				barHeight: 0,
 				windowHeight: 0,
 				headTop: 0,
-				tab: 2, //1:招工,2:找活
+				tab: 1, //1:招工,2:找活
 
 				page: 1,
 				pageTotal: -1,
@@ -271,6 +275,27 @@
 				image {
 					width: 16rpx;
 					height: 6rpx;
+				}
+			}
+
+			.tabs {
+				width: 354rpx;
+				height: 48rpx;
+				background: #FFFFFF;
+				border-radius: 24rpx;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+
+				image {
+					width: 100%;
+					height: 100%;
 				}
 			}
 
