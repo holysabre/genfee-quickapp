@@ -54,6 +54,14 @@
 				{{info.company||'暂无'}}
 			</view>
 		</view>
+		<view class="form-item form-item2" v-if="info.party!=2">
+			<view class="label">
+				岗位收费要求：
+			</view>
+			<view class="gray">
+				该岗位招聘不涉及收费
+			</view>
+		</view>
 
 		<view class="footer">
 			<view class="warn">
@@ -218,6 +226,12 @@
 			font-size: 28rpx;
 			color: #FFC900;
 			max-width: 550rpx;
+		}
+
+		.gray {
+			font-weight: 400;
+			font-size: 28rpx;
+			color: #222222;
 		}
 
 		.form-item1 {
