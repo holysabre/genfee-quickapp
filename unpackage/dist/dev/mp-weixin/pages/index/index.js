@@ -103,11 +103,6 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   var g0 = _vm.list && _vm.list.length > 0
-  if (!_vm._isMounted) {
-    _vm.e0 = function ($event) {
-      _vm.addressShow = true
-    }
-  }
   _vm.$mp.data = Object.assign(
     {},
     {
@@ -221,9 +216,28 @@ var _index = __webpack_require__(/*! @/api/index.js */ 43);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var pickerAddress = function pickerAddress() {
   __webpack_require__.e(/*! require.ensure | components/liudx-pickerAddress/index */ "components/liudx-pickerAddress/index").then((function () {
-    return resolve(__webpack_require__(/*! @/components/liudx-pickerAddress/index.vue */ 65));
+    return resolve(__webpack_require__(/*! @/components/liudx-pickerAddress/index.vue */ 89));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var _default = {
@@ -233,24 +247,25 @@ var _default = {
       barHeight: 0,
       windowHeight: 0,
       headTop: 0,
-      tab: 2,
+      tab: 1,
       //1:招工,2:找活
 
       page: 1,
       pageTotal: -1,
       list: [],
       addressShow: false,
-      address: '宁波市',
+      address: '全国',
       provinceId: 0,
       cityId: 0,
-      areaId: 0
+      areaId: 0,
+      streetId: 0
     };
   },
   components: {
     pickerAddress: pickerAddress
   },
   onLoad: function onLoad() {
-    this.getList(false, true);
+    // this.getList(false, true)
   },
   onPullDownRefresh: function onPullDownRefresh() {
     this.page = 1;
@@ -270,6 +285,15 @@ var _default = {
     this.headHeight = sys.height + 60;
     this.windowHeight = sys.windowHeight;
     this.barHeight = sys.barHeight;
+    if (uni.getStorageSync('streetId')) {
+      this.streetId = uni.getStorageSync('streetId');
+      this.address = uni.getStorageSync('streetName');
+    } else {
+      this.streetId = 0;
+      this.address = '全国';
+    }
+    this.page = 1;
+    this.getList(false, true);
   },
   methods: {
     addresspick: function addresspick(obj) {
@@ -277,9 +301,15 @@ var _default = {
       this.provinceId = obj.province.id;
       this.cityId = obj.city.id;
       this.areaId = obj.area.id;
-      this.address = obj.area.name;
+      this.streetId = obj.street.id;
+      this.address = obj.street.name;
       this.page = 1;
       this.getList(true, true);
+    },
+    toAddress: function toAddress() {
+      uni.navigateTo({
+        url: '/pages/index/region'
+      });
     },
     toUser: function toUser() {
       uni.navigateTo({
@@ -288,24 +318,58 @@ var _default = {
     },
     //拨打电话
     onPhone: function onPhone(item) {
-      (0, _index.addContact)(item.user_id).then(function (res) {
-        console.log(res.data.data.mobile);
-        uni.makePhoneCall({
-          phoneNumber: res.data.data.mobile.toString(),
-          //电话号码
-          success: function success(e) {
-            console.log(e);
-          },
-          fail: function fail(e) {
-            console.log(e);
-          }
-        });
-      }).catch(function (err) {});
+      // addContact(item.user_id).then(res => {
+      // 	console.log(res)
+      // 	if (res.code == 40010) {
+      // 		uni.showModal({
+      // 			title: '温馨提示',
+      // 			content: '联系对方前需要您完成实名认证。',
+      // 			cancelText: '取消',
+      // 			confirmText: '立即认证',
+      // 			success: async res2 => {
+      // 				if (res2.confirm) {
+      // 					uni.navigateTo({
+      // 						url: '/pages/approve'
+      // 					})
+      // 				}
+      // 			},
+
+      // 		});
+      // 		return
+      // 	}
+
+      // 	uni.makePhoneCall({
+      // 		phoneNumber: res.data.data.mobile.toString(), //电话号码
+      // 		success: function(e) {
+      // 			console.log(e);
+      // 		},
+      // 		fail: function(e) {
+      // 			console.log(e);
+
+      // 		}
+      // 	})
+      // }).catch(err => {})
+      uni.makePhoneCall({
+        phoneNumber: item.mobile.toString(),
+        //电话号码
+        success: function success(e) {
+          console.log(e);
+        },
+        fail: function fail(e) {
+          console.log(e);
+        }
+      });
     },
     changeTab: function changeTab(val) {
       this.tab = val;
       this.page = 1;
       this.getList(true, true);
+    },
+    changeItem: function changeItem(item) {
+      console.log('item===>', item);
+      uni.navigateTo({
+        url: '/pages/index/detail?id=' + item.id
+      });
     },
     getList: function getList(refresh, replace) {
       var _this = this;
@@ -320,7 +384,7 @@ var _default = {
                   page: _this.page,
                   per_page: 10,
                   party: _this.tab,
-                  region_id: _this.areaId
+                  region_id: _this.streetId
                 });
               case 2:
                 res = _context.sent;
@@ -330,8 +394,8 @@ var _default = {
                   if (replace) {
                     origin = [];
                   }
-                  _this.list = origin.concat(res.data);
-                  _this.pageTotal = res.last_page;
+                  _this.list = origin.concat(res.data.data);
+                  _this.pageTotal = res.data.last_page;
                 }
                 if (refresh) {
                   uni.stopPullDownRefresh();

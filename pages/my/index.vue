@@ -2,7 +2,7 @@
 	<view class="content" :style="{ paddingTop: headTop + 'px' }">
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="navigater" @click="onBack" :style="{height: barHeight + 'px'}">
-			<image src="../../static/images/back.png" mode="" class="icon"></image>
+			<image src="../../static/images/back2.png" mode="" class="icon"></image>
 			<view class="title">
 				我的
 			</view>
@@ -258,9 +258,8 @@
 			align-items: center;
 
 			.icon {
-				width: 60rpx;
-				height: 60rpx;
-				border-radius: 50%;
+				width: 50rpx;
+				height: 50rpx;
 				margin-right: 16rpx;
 			}
 

@@ -10,8 +10,8 @@
 			</view>
 			<!-- #endif -->
 			<view class="header">
-				<view class="area" @click="addressShow = true">
-					<text>{{address}}</text>
+				<view class="area" @click="toAddress">
+					<text class="omit1">{{address}}</text>
 					<image src="../../static/images/more.png" mode=""></image>
 				</view>
 				<!-- <view class="tabList">
@@ -62,7 +62,7 @@
 					</view>
 
 					<view class="rBox" @click.stop="onPhone(item)">
-						<image src="../../static/images/phone.png" mode=""></image>
+						<!-- <image src="../../static/images/phone.png" mode=""></image> -->
 						<text>立刻联系</text>
 					</view>
 				</view>
@@ -75,7 +75,7 @@
 				暂无数据
 			</view>
 		</view>
-		<pickerAddress v-model="addressShow" @confirm="addresspick" v-if="addressShow" />
+		<!-- <pickerAddress v-model="addressShow" @confirm="addresspick" v-if="addressShow" /> -->
 	</view>
 </template>
 
@@ -104,13 +104,14 @@
 				provinceId: 0,
 				cityId: 0,
 				areaId: 0,
+				streetId: 0,
 			}
 		},
 		components: {
 			pickerAddress
 		},
 		onLoad() {
-			this.getList(false, true)
+			// this.getList(false, true)
 		},
 		onPullDownRefresh() {
 			this.page = 1
@@ -136,6 +137,15 @@
 			// #ifdef MP-TOUTIAO
 			this.barHeight = 0
 			// #endif
+			if (uni.getStorageSync('streetId')) {
+				this.streetId = uni.getStorageSync('streetId')
+				this.address = uni.getStorageSync('streetName')
+			} else {
+				this.streetId = 0
+				this.address = '全国'
+			}
+			this.page = 1
+			this.getList(false, true)
 		},
 		methods: {
 			addresspick(obj) {
@@ -143,9 +153,15 @@
 				this.provinceId = obj.province.id;
 				this.cityId = obj.city.id;
 				this.areaId = obj.area.id;
-				this.address = obj.area.name
+				this.streetId = obj.street.id;
+				this.address = obj.street.name
 				this.page = 1
 				this.getList(true, true)
+			},
+			toAddress() {
+				uni.navigateTo({
+					url: '/pages/index/region'
+				})
 			},
 			toUser() {
 				uni.navigateTo({
@@ -154,37 +170,47 @@
 			},
 			//拨打电话
 			onPhone(item) {
-				addContact(item.user_id).then(res => {
-					console.log(res)
-					if (res.code == 40010) {
-						uni.showModal({
-							title: '温馨提示',
-							content: '联系对方前需要您完成实名认证。',
-							cancelText: '取消',
-							confirmText: '立即认证',
-							success: async res2 => {
-								if (res2.confirm) {
-									uni.navigateTo({
-										url: '/pages/approve'
-									})
-								}
-							},
+				// addContact(item.user_id).then(res => {
+				// 	console.log(res)
+				// 	if (res.code == 40010) {
+				// 		uni.showModal({
+				// 			title: '温馨提示',
+				// 			content: '联系对方前需要您完成实名认证。',
+				// 			cancelText: '取消',
+				// 			confirmText: '立即认证',
+				// 			success: async res2 => {
+				// 				if (res2.confirm) {
+				// 					uni.navigateTo({
+				// 						url: '/pages/approve'
+				// 					})
+				// 				}
+				// 			},
 
-						});
-						return
+				// 		});
+				// 		return
+				// 	}
+
+				// 	uni.makePhoneCall({
+				// 		phoneNumber: res.data.data.mobile.toString(), //电话号码
+				// 		success: function(e) {
+				// 			console.log(e);
+				// 		},
+				// 		fail: function(e) {
+				// 			console.log(e);
+
+				// 		}
+				// 	})
+				// }).catch(err => {})
+				uni.makePhoneCall({
+					phoneNumber: item.mobile.toString(), //电话号码
+					success: function(e) {
+						console.log(e);
+					},
+					fail: function(e) {
+						console.log(e);
+
 					}
-
-					uni.makePhoneCall({
-						phoneNumber: res.data.data.mobile.toString(), //电话号码
-						success: function(e) {
-							console.log(e);
-						},
-						fail: function(e) {
-							console.log(e);
-
-						}
-					})
-				}).catch(err => {})
+				})
 			},
 			changeTab(val) {
 				this.tab = val;
@@ -202,7 +228,7 @@
 					page: this.page,
 					per_page: 10,
 					party: this.tab,
-					region_id: this.areaId
+					region_id: this.streetId
 				})
 				console.log('getList-res--->', res)
 				if (res.code === 200) {
@@ -210,8 +236,8 @@
 					if (replace) {
 						origin = []
 					}
-					this.list = origin.concat(res.data)
-					this.pageTotal = res.last_page
+					this.list = origin.concat(res.data.data)
+					this.pageTotal = res.data.last_page
 				}
 				if (refresh) {
 					uni.stopPullDownRefresh()
@@ -226,12 +252,11 @@
 		padding-bottom: 100rpx;
 
 		.headTop {
-
 			width: 100%;
 			position: fixed;
 			top: 0;
 			left: 0;
-			background-color: #FFE37B;
+			background-color: #B0CBEB;
 			z-index: 999;
 		}
 
@@ -267,9 +292,10 @@
 				align-items: center;
 
 				text {
-					margin-right: 16rpx;
+					margin-right: 8rpx;
 					font-size: 24rpx;
 					color: #222222;
+					max-width: 150rpx;
 				}
 
 				image {
@@ -374,6 +400,7 @@
 					.lBox {
 						display: flex;
 						align-items: center;
+						max-width: 500rpx;
 
 						image {
 							width: 50rpx;
@@ -385,6 +412,7 @@
 							font-size: 36rpx;
 							color: #222222;
 							font-weight: 600;
+							max-width: 400rpx;
 						}
 					}
 
@@ -412,11 +440,12 @@
 					.rBox {
 						display: flex;
 						align-items: center;
-						width: 182rpx;
+						justify-content: center;
+						width: 130rpx;
 						height: 50rpx;
 						border-radius: 26rpx;
 						border: 2rpx solid #FFE37B;
-						padding-left: 20rpx;
+						// padding-left: 20rpx;
 
 						image {
 							width: 44rpx;
@@ -444,6 +473,7 @@
 				.address {
 					display: flex;
 					align-items: center;
+					max-width: 450rpx;
 
 					image {
 						width: 32rpx;

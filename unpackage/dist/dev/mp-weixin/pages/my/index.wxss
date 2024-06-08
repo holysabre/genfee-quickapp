@@ -30,12 +30,10 @@
 .content .navigater.data-v-4dcceeb0 {
   display: flex;
   align-items: center;
-  padding: 0 20rpx;
 }
 .content .navigater .icon.data-v-4dcceeb0 {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
+  width: 50rpx;
+  height: 50rpx;
   margin-right: 16rpx;
 }
 .content .navigater .title.data-v-4dcceeb0 {
@@ -46,12 +44,11 @@
 .content .main.data-v-4dcceeb0 {
   background-color: white;
   border-radius: 16rpx;
-  padding: 20rpx 20rpx 40rpx 20rpx;
+  padding: 20rpx;
 }
 .content .main .top.data-v-4dcceeb0 {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 45rpx;
 }
 .content .main .top .info.data-v-4dcceeb0 {
   display: flex;

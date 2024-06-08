@@ -16,6 +16,14 @@
 				"enablePullDownRefresh": true //开启下拉
 			}
 		}, {
+			"path": "pages/index/region",
+			"style": {
+				"navigationBarTitleText": "地区选择",
+				"navigationBarBackgroundColor": "#ffffff",
+				"backgroundColor": "#ffffff", //页面颜色
+				"enablePullDownRefresh": true //开启下拉
+			}
+		}, {
 			"path": "pages/my/index",
 			"style": {
 				"navigationBarTitleText": "我的",
@@ -42,8 +50,8 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "工蜂招工找活平台", // 全局默认标题
-		"navigationBarBackgroundColor": "#FFE37B", //导航条颜色//2330e5蓝
-		"backgroundColor": "#FFE37B", //页面颜色
+		"navigationBarBackgroundColor": "#B0CBEB", //导航条颜色//2330e5蓝
+		"backgroundColor": "#B0CBEB", //页面颜色
 		"backgroundColorTop": "#F7F7F7", //顶部窗口的背景色
 		"backgroundColorBottom": "#F7F7F7" //底部窗口的背景色
 

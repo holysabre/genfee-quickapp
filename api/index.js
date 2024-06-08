@@ -14,12 +14,12 @@ export const loginByDouyin = (params) => {
 
 // 获得话题列表
 export const getTopics = (params) => {
-	return requestFun('get', '/topics', params)
+	return requestFun('get', '/agent_topics', params)
 }
 
 // 获得话题详情
 export const getTopicsDetail = (tId) => {
-	return requestFun('get', `/topics/${tId}`)
+	return requestFun('get', `/agent_topics/${tId}`)
 }
 
 // 我的

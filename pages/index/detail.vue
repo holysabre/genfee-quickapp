@@ -1,19 +1,19 @@
 <template>
 	<view class="detail">
-		<view class="form-item form-item1">
+		<!-- <view class="form-item form-item1">
 			<view class="label">
 				名称：
 			</view>
 			<view class="value">
 				{{info.title||'暂无'}}
 			</view>
-		</view>
+		</view> -->
 		<view class="form-item form-item1">
 			<view class="label">
 				需求职业：
 			</view>
 			<view class="tags">
-				<view class="tag" v-for="(item,index) in info.topic_categories" :key="index">
+				<view class="tag" v-for="(item,index) in info.category_name.split('、')" :key="index">
 					{{item}}
 				</view>
 			</view>
@@ -26,7 +26,7 @@
 					要求：
 				</view>
 				<view class="gary">
-					发布时间：{{info.published_at||'暂无'}}
+					发布时间：{{info.created_at||'暂无'}}
 				</view>
 			</view>
 			<view class="matter">
@@ -51,7 +51,7 @@
 				企业单位：
 			</view>
 			<view class="value">
-				{{info.company||'暂无'}}
+				{{info.company_name||'暂无'}}
 			</view>
 		</view>
 		<view class="form-item form-item2" v-if="info.party!=2">
@@ -111,37 +111,47 @@
 				}
 			}, //拨打电话
 			onPhone() {
-				addContact(this.info.user_id).then(res => {
-					console.log(res)
-					if (res.code == 40010) {
-						uni.showModal({
-							title: '温馨提示',
-							content: '联系对方前需要您完成实名认证。',
-							cancelText: '取消',
-							confirmText: '立即认证',
-							success: async res2 => {
-								if (res2.confirm) {
-									uni.navigateTo({
-										url: '/pages/approve'
-									})
-								}
-							},
+				// addContact(this.info.user_id).then(res => {
+				// 	console.log(res)
+				// 	if (res.code == 40010) {
+				// 		uni.showModal({
+				// 			title: '温馨提示',
+				// 			content: '联系对方前需要您完成实名认证。',
+				// 			cancelText: '取消',
+				// 			confirmText: '立即认证',
+				// 			success: async res2 => {
+				// 				if (res2.confirm) {
+				// 					uni.navigateTo({
+				// 						url: '/pages/approve'
+				// 					})
+				// 				}
+				// 			},
 
-						});
-						return
+				// 		});
+				// 		return
+				// 	}
+
+				// 	uni.makePhoneCall({
+				// 		phoneNumber: res.data.data.mobile.toString(), //电话号码
+				// 		success: function(e) {
+				// 			console.log(e);
+				// 		},
+				// 		fail: function(e) {
+				// 			console.log(e);
+
+				// 		}
+				// 	})
+				// }).catch(err => {})
+				uni.makePhoneCall({
+					phoneNumber: this.info.mobile.toString(), //电话号码
+					success: function(e) {
+						console.log(e);
+					},
+					fail: function(e) {
+						console.log(e);
+
 					}
-
-					uni.makePhoneCall({
-						phoneNumber: res.data.data.mobile.toString(), //电话号码
-						success: function(e) {
-							console.log(e);
-						},
-						fail: function(e) {
-							console.log(e);
-
-						}
-					})
-				}).catch(err => {})
+				})
 			},
 		}
 	}
@@ -151,7 +161,7 @@
 	.detail {
 		min-height: 100vh;
 		background-color: #fff;
-		padding: 28rpx 32rpx;
+		padding: 28rpx 32rpx 300rpx;
 
 		.form-item {
 			margin-bottom: 20rpx;
@@ -246,8 +256,11 @@
 
 		.footer {
 			position: fixed;
-			bottom: 30rpx;
-			left: 35rpx;
+			bottom: 0rpx;
+			left: 0rpx;
+			box-sizing: border-box;
+			padding: 20rpx 35rpx 30rpx;
+			background-color: #FFFFFF;
 
 			.warn {
 				margin-bottom: 6rpx;

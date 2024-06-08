@@ -26,7 +26,7 @@
 /* 文章场景相关 */
 /*每个页面公共css */
 page {
-  background-color: #FFE37B;
+  background-color: #B0CBEB;
 }
 view,
 scroll-view,

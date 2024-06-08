@@ -30,6 +30,13 @@
 						</view>
 					</view>
 				</picker-view-column>
+				<picker-view-column>
+					<view class="u-column-item" v-for="(item,index) in districtsObj.streets" :key="index">
+						<view class="u-line-1">
+							{{item.name}}
+						</view>
+					</view>
+				</picker-view-column>
 			</picker-view>
 		</view>
 	</u-popup>
@@ -62,10 +69,12 @@
 					provinces: [],
 					cities: [],
 					areas: [],
+					streets: []
 				},
 				province: 0,
 				city: 0,
-				area: 0
+				area: 0,
+				street: 0,
 			}
 		},
 		watch: {
@@ -75,6 +84,9 @@
 			},
 			city(val) {
 				this.loadAreas(this.districtsObj.cities[this.city].id);
+			},
+			area(val) {
+				this.loadStreets(this.districtsObj.areas[this.area].id);
 			}
 		},
 		mounted() {
@@ -138,22 +150,44 @@
 							data
 						} = res.data
 						this.districtsObj.areas = data.data
+						this.loadStreets(data.data[0].id)
 					},
 					fail: async (res) => {}
 				})
 			},
+			loadStreets(StreetId) {
+				uni.request({
+					url: defaultConfig.baseUrl + '/tools/regions',
+					data: {
+						pid: StreetId,
+						level: 3,
+					},
+					method: 'get',
+					success: async (res) => {
+						let {
+							data
+						} = res.data
+						this.districtsObj.streets = data.data
+					},
+					fail: async (res) => {}
+				})
+			},
+
+
 			bindChange(event) {
 				this.pickVal = event.detail.value;
 				let i = 0;
 				this.province = this.pickVal[i++];
 				this.city = this.pickVal[i++];
 				this.area = this.pickVal[i++];
+				this.street = this.pickVal[i++];
 			},
 			getResult(event = null) {
 				let result = {
 					province: this.districtsObj.provinces[this.province],
 					city: this.districtsObj.cities[this.city],
 					area: this.districtsObj.areas[this.area],
+					street: this.districtsObj.streets[this.street],
 				}
 				if (event) this.$emit(event, result);
 				this.close();

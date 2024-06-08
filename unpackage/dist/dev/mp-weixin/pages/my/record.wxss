@@ -30,7 +30,6 @@
 .content .navigater.data-v-4bfcefeb {
   display: flex;
   align-items: center;
-  padding: 0 20rpx;
   position: -webkit-sticky;
   position: sticky;
   z-index: 99;
@@ -74,6 +73,7 @@
 .content .list .item .top .lBox text.data-v-4bfcefeb {
   font-size: 36rpx;
   color: #222222;
+  font-weight: 600;
 }
 .content .list .item .top .rBox.data-v-4bfcefeb {
   display: flex;
