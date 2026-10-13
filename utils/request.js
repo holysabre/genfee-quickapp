@@ -8,7 +8,7 @@ import {
 
 
 export function requestFun(method, url, data = {}) {
-	console.log('requestFun==>')
+	console.log('requestFun==>', method, url, JSON.stringify(data))
 	let header = {
 		'content-type': 'application/json',
 		// 'User-Agent':'GenFee/3.1.9'
