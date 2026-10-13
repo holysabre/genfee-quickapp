@@ -13,7 +13,7 @@
 				需求职业：
 			</view>
 			<view class="tags">
-				<view class="tag" v-for="(item,index) in info.category_name.split('、')" :key="index">
+				<view class="tag" v-for="(item,index) in (info._cat||'其他').split('、')" :key="index">
 					{{item}}
 				</view>
 			</view>
@@ -43,7 +43,7 @@
 				薪酬范围：
 			</view>
 			<view class="yellow">
-				{{info.salary||'暂无'}}
+				{{info._salary||'暂无'}}
 			</view>
 		</view>
 		<view class="form-item form-item2" v-if="info.party!=2">
@@ -51,7 +51,7 @@
 				企业单位：
 			</view>
 			<view class="value">
-				{{info.company_name||'暂无'}}
+				{{info._company||'暂无'}}
 			</view>
 		</view>
 		<view class="form-item form-item2" v-if="info.party!=2">
@@ -100,10 +100,6 @@
 </template>
 
 <script>
-	import {
-		addContact,
-		getTopicsDetail
-	} from "@/api/index.js"
 	import adFeed from '@/components/ad-feed.vue'
 	export default {
 		data() {
@@ -122,21 +118,34 @@
 		onLoad(options) {
 			if (options.id) {
 				this.id = options.id
-				this.getInfo()
+				this.loadInfo()
 			}
 		},
 		onUnload() {
 			if (this._adWaitTimer) clearTimeout(this._adWaitTimer)
 		},
 		onPullDownRefresh() {
-			this.getInfo(true)
+			this.loadInfo(true)
 		},
 		methods: {
-			async getInfo(refresh = false) {
-				let res = await getTopicsDetail(this.id)
-				console.log('getInfo-res--->', res)
-				if (res.code === 200) {
-					this.info = res.data.data
+			// 详情数据来自列表页缓存（/topics/{id} 接口需登录态，当前未接入登录，暂不请求）
+			loadInfo(refresh = false) {
+				try {
+					var raw = uni.getStorageSync('topic_detail_' + this.id)
+					if (raw) {
+						var item = typeof raw === 'string' ? JSON.parse(raw) : raw
+						// 兜底：补齐平铺字段（防脏缓存）
+						if (item._cat === undefined) item._cat = item.category_name || '其他'
+						if (item._salary === undefined) item._salary = (item.salary && item.salary !== '-') ? item.salary : ''
+						if (item._company === undefined) item._company = item.company || item.company_name || ''
+						if (item._phone === undefined) item._phone = item.phone || item.mobile || ''
+						this.info = item
+						console.log('detail loaded from cache, id=' + this.id)
+					} else {
+						console.log('detail cache miss, id=' + this.id)
+					}
+				} catch (e) {
+					console.log('detail cache err => ' + (e && e.message))
 				}
 				if (refresh) {
 					uni.stopPullDownRefresh()
@@ -153,8 +162,17 @@
 			},
 			// 拨打电话
 			doCall() {
+				var phone = this.info._phone || ''
+				if (!phone) {
+					uni.showToast({
+						icon: 'none',
+						title: '该信息未提供联系电话',
+						duration: 2000
+					})
+					return
+				}
 				uni.makePhoneCall({
-					phoneNumber: this.info.mobile.toString(), //电话号码
+					phoneNumber: String(phone), //电话号码
 					success: function(e) {
 						console.log(e);
 					},

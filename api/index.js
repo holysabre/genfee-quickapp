@@ -14,12 +14,14 @@ export const loginByDouyin = (params) => {
 
 // 获得话题列表
 export const getTopics = (params) => {
-	return requestFun('get', '/agent_topics', params)
+	return requestFun('get', '/topics', params)
 }
 
 // 获得话题详情
+// 注意：/topics/{id} 接口需要登录态（未登录返回 401），当前应用未接入登录；
+// 详情页改为使用列表页传入的数据（storage 缓存），此接口保留备用。
 export const getTopicsDetail = (tId) => {
-	return requestFun('get', `/agent_topics/${tId}`)
+	return requestFun('get', `/topics/${tId}`)
 }
 
 // 我的

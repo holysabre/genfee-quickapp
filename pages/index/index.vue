@@ -42,18 +42,18 @@
 						<view class="lBox">
 							<image src="../../static/images/find.png" mode="" v-if="tab===2"></image>
 							<image src="../../static/images/recruit.png" mode="" v-if="tab===1"></image>
-							<text>{{item.category_name}}</text>
+							<text>{{item._cat}}</text>
 						</view>
 
 						<view class="salary ">
-							{{item.salary}}
+							{{item._salary}}
 						</view>
 					</view>
 					<view class="detail">
 						{{item.content}}
 					</view>
 					<view class="company">
-						{{item.company_name||''}}
+						{{item._company}}
 						<!-- item.company_nameitem.company_nameitem.company_name -->
 					</view>
 					<view class="bot">
@@ -229,39 +229,17 @@
 			},
 			//拨打电话
 			onPhone(item) {
-				// addContact(item.user_id).then(res => {
-				// 	console.log(res)
-				// 	if (res.code == 40010) {
-				// 		uni.showModal({
-				// 			title: '温馨提示',
-				// 			content: '联系对方前需要您完成实名认证。',
-				// 			cancelText: '取消',
-				// 			confirmText: '立即认证',
-				// 			success: async res2 => {
-				// 				if (res2.confirm) {
-				// 					uni.navigateTo({
-				// 						url: '/pages/approve'
-				// 					})
-				// 				}
-				// 			},
-
-				// 		});
-				// 		return
-				// 	}
-
-				// 	uni.makePhoneCall({
-				// 		phoneNumber: res.data.data.mobile.toString(), //电话号码
-				// 		success: function(e) {
-				// 			console.log(e);
-				// 		},
-				// 		fail: function(e) {
-				// 			console.log(e);
-
-				// 		}
-				// 	})
-				// }).catch(err => {})
+				var phone = item._phone || item.phone || ''
+				if (!phone) {
+					uni.showToast({
+						icon: 'none',
+						title: '该信息未提供联系电话',
+						duration: 2000
+					})
+					return
+				}
 				uni.makePhoneCall({
-					phoneNumber: item.mobile.toString(), //电话号码
+					phoneNumber: String(phone), //电话号码
 					success: function(e) {
 						console.log(e);
 					},
@@ -278,6 +256,10 @@
 			},
 			changeItem(item) {
 				console.log('item===>', item)
+				// 详情数据传递（/topics/{id} 接口需登录态，详情页改用列表数据）
+				try {
+					uni.setStorageSync('topic_detail_' + item.id, JSON.stringify(item))
+				} catch (e) {}
 				uni.navigateTo({
 					url: '/pages/index/detail?id=' + item.id
 				})
@@ -295,13 +277,38 @@
 					if (replace) {
 						origin = []
 					}
-					this.rawJobs = origin.concat(res.data.data)
+					// topics 接口字段适配（分类/公司/电话为嵌套或异名字段，平铺为模板可直接读取的字段）
+					this.rawJobs = origin.concat((res.data.data || []).map(item => this.decorateTopic(item)))
 					this.rebuildList()
 					this.pageTotal = res.data.last_page
+					// 修正页码（服务端实际页数少于请求页时，如空页回归）
+					if (this.page > this.pageTotal && this.pageTotal > 0) {
+						this.page = this.pageTotal
+					}
 				}
 				if (refresh) {
 					uni.stopPullDownRefresh()
 				}
+			},
+			// topics 数据映射：_cat / _company / _phone / _salary（快应用模板表达式能力有限，统一在此平铺）
+			decorateTopic(item) {
+				var cats = ''
+				try {
+					if (item.topic_categories && item.topic_categories.length) {
+						cats = item.topic_categories.map(function(c) {
+							return c.category_name || (c.category && c.category.name) || ''
+						}).filter(function(x) {
+							return !!x
+						}).join('、')
+					}
+				} catch (e) {}
+				var salary = (item.salary && item.salary !== '-') ? item.salary : ''
+				return Object.assign({}, item, {
+					_cat: cats || '其他',
+					_company: item.company || '',
+					_phone: item.phone || '',
+					_salary: salary
+				})
 			},
 			// 重建列表：每 5 条招聘后插入一个广告位（广告由 ad-feed 组件自治加载）
 			rebuildList() {
