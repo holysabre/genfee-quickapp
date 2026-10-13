@@ -33,40 +33,45 @@
 			</view>
 		</view>
 		<view class="list" v-if="list&&list.length>0">
-			<view class="item" v-for="(item,index) in list" :key="index" @click="changeItem(item)">
-				<view class="top">
-					<view class="lBox">
-						<image src="../../static/images/find.png" mode="" v-if="tab===2"></image>
-						<image src="../../static/images/recruit.png" mode="" v-if="tab===1"></image>
-						<text>{{item.category_name}}</text>
-					</view>
+			<block v-for="(item,index) in list" :key="index">
+				<!-- 广告位（ad-feed 组件自治加载，每 5 条招聘后一个位置） -->
+				<ad-feed v-if="item.__isAd"></ad-feed>
+				<!-- 招聘卡片 -->
+				<view class="item" v-else-if="!item.__isAd" @click="changeItem(item)">
+					<view class="top">
+						<view class="lBox">
+							<image src="../../static/images/find.png" mode="" v-if="tab===2"></image>
+							<image src="../../static/images/recruit.png" mode="" v-if="tab===1"></image>
+							<text>{{item.category_name}}</text>
+						</view>
 
-					<view class="salary ">
-						{{item.salary}}
-					</view>
-				</view>
-				<view class="detail">
-					{{item.content}}
-				</view>
-				<view class="company">
-					{{item.company_name||''}}
-					<!-- item.company_nameitem.company_nameitem.company_name -->
-				</view>
-				<view class="bot">
-					<view class="lBox">
-
-						<view class="address">
-							<image src="../../static/images/address.png" mode=""></image>
-							<text class="omit1">{{item.address}}</text>
+						<view class="salary ">
+							{{item.salary}}
 						</view>
 					</view>
+					<view class="detail">
+						{{item.content}}
+					</view>
+					<view class="company">
+						{{item.company_name||''}}
+						<!-- item.company_nameitem.company_nameitem.company_name -->
+					</view>
+					<view class="bot">
+						<view class="lBox">
 
-					<view class="rBox" @click.stop="onPhone(item)">
-						<!-- <image src="../../static/images/phone.png" mode=""></image> -->
-						<text>立刻联系</text>
+							<view class="address">
+								<image src="../../static/images/address.png" mode=""></image>
+								<text class="omit1">{{item.address}}</text>
+							</view>
+						</view>
+
+						<view class="rBox" @click.stop="onPhone(item)">
+							<!-- <image src="../../static/images/phone.png" mode=""></image> -->
+							<text>立刻联系</text>
+						</view>
 					</view>
 				</view>
-			</view>
+			</block>
 		</view>
 
 		<view class="empty" v-else>
@@ -85,6 +90,7 @@
 		addContact
 	} from "@/api/index.js"
 	import pickerAddress from '@/components/liudx-pickerAddress/index.vue'
+	import adFeed from '@/components/ad-feed.vue'
 	export default {
 		data() {
 			return {
@@ -97,6 +103,7 @@
 				page: 1,
 				pageTotal: -1,
 				list: [],
+				rawJobs: [], // 纯招聘数据（不含广告位）
 
 
 				addressShow: false,
@@ -108,7 +115,8 @@
 			}
 		},
 		components: {
-			pickerAddress
+			pickerAddress,
+			adFeed
 		},
 		onLoad() {
 			// this.getList(false, true)
@@ -232,16 +240,32 @@
 				})
 				console.log('getList-res--->', res)
 				if (res.code === 200) {
-					let origin = this.list
+					let origin = this.rawJobs
 					if (replace) {
 						origin = []
 					}
-					this.list = origin.concat(res.data.data)
+					this.rawJobs = origin.concat(res.data.data)
+					this.rebuildList()
 					this.pageTotal = res.data.last_page
 				}
 				if (refresh) {
 					uni.stopPullDownRefresh()
 				}
+			},
+			// 重建列表：每 5 条招聘后插入一个广告位（广告由 ad-feed 组件自治加载）
+			rebuildList() {
+				const out = []
+				const jobs = this.rawJobs
+				for (let i = 0; i < jobs.length; i++) {
+					out.push(jobs[i])
+					if ((i + 1) % 5 === 0) {
+						out.push({
+							__isAd: true,
+							key: 'ad_' + (i + 1)
+						})
+					}
+				}
+				this.list = out
 			}
 		},
 	}

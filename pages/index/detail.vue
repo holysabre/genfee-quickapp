@@ -75,6 +75,27 @@
 				免费联系
 			</view>
 		</view>
+
+		<!-- 联系前广告弹层（ad-feed 组件自治加载；v-show 常驻以便提前加载） -->
+		<view class="ad-layer" v-show="showAdLayer">
+			<view class="ad-mask" @click="closeAdLayer"></view>
+			<view class="ad-panel">
+				<view class="ad-panel-head">
+					<text class="ad-panel-title">赞助商广告</text>
+					<view class="ad-close" @click="closeAdLayer">✕</view>
+				</view>
+				<ad-feed @ready="onAdReady" @fail="onAdFail"></ad-feed>
+				<view class="ad-loading" v-if="!adReady && !adFail">
+					<text>广告加载中，可继续操作</text>
+				</view>
+				<view class="ad-tip">
+					点击上方广告支持我们，或直接继续联系
+				</view>
+				<view class="ad-continue" @click="onAdContinue">
+					继续联系
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -83,18 +104,29 @@
 		addContact,
 		getTopicsDetail
 	} from "@/api/index.js"
+	import adFeed from '@/components/ad-feed.vue'
 	export default {
 		data() {
 			return {
 				id: 0,
-				info: {}
+				info: {},
+				adReady: false, // 弹层广告是否已就绪
+				adFail: false, // 广告加载失败
+				showAdLayer: false, // 联系前广告弹层
+				contactUnlocked: false // 本次进入详情页是否已放行联系
 			}
+		},
+		components: {
+			adFeed
 		},
 		onLoad(options) {
 			if (options.id) {
 				this.id = options.id
 				this.getInfo()
 			}
+		},
+		onUnload() {
+			if (this._adWaitTimer) clearTimeout(this._adWaitTimer)
 		},
 		onPullDownRefresh() {
 			this.getInfo(true)
@@ -109,39 +141,18 @@
 				if (refresh) {
 					uni.stopPullDownRefresh()
 				}
-			}, //拨打电话
-			onPhone() {
-				// addContact(this.info.user_id).then(res => {
-				// 	console.log(res)
-				// 	if (res.code == 40010) {
-				// 		uni.showModal({
-				// 			title: '温馨提示',
-				// 			content: '联系对方前需要您完成实名认证。',
-				// 			cancelText: '取消',
-				// 			confirmText: '立即认证',
-				// 			success: async res2 => {
-				// 				if (res2.confirm) {
-				// 					uni.navigateTo({
-				// 						url: '/pages/approve'
-				// 					})
-				// 				}
-				// 			},
-
-				// 		});
-				// 		return
-				// 	}
-
-				// 	uni.makePhoneCall({
-				// 		phoneNumber: res.data.data.mobile.toString(), //电话号码
-				// 		success: function(e) {
-				// 			console.log(e);
-				// 		},
-				// 		fail: function(e) {
-				// 			console.log(e);
-
-				// 		}
-				// 	})
-				// }).catch(err => {})
+			}, //弹层广告就绪
+			onAdReady() {
+				this.adReady = true
+				console.log('[ad] layer ad ready')
+			},
+			// 弹层广告加载失败
+			onAdFail() {
+				this.adFail = true
+				console.log('[ad] layer ad fail')
+			},
+			// 拨打电话
+			doCall() {
 				uni.makePhoneCall({
 					phoneNumber: this.info.mobile.toString(), //电话号码
 					success: function(e) {
@@ -152,6 +163,44 @@
 
 					}
 				})
+			},
+			//「免费联系」：首次点击弹广告层（广告不可用时自动降级放行）
+			onPhone() {
+				if (this.contactUnlocked || this.adFail) {
+					this.doCall()
+					return
+				}
+				this.showAdLayer = true
+				if (this.adReady) {
+					// 广告已就绪，等用户操作
+					return
+				}
+				// 广告未就绪：最多等 3 秒，超时自动放行（不阻塞核心功能）
+				if (this._adWaitTimer) clearTimeout(this._adWaitTimer)
+				this._adWaitTimer = setTimeout(() => {
+					if (this.showAdLayer && !this.adReady) {
+						console.log('[ad] wait timeout, pass through')
+						this.onAdContinue()
+					}
+				}, 3000)
+			},
+			//「继续联系」/ 等待超时：放行拨号
+			onAdContinue() {
+				this.showAdLayer = false
+				if (this._adWaitTimer) {
+					clearTimeout(this._adWaitTimer)
+					this._adWaitTimer = null
+				}
+				this.contactUnlocked = true
+				this.doCall()
+			},
+			// 关闭弹层（不拨号）
+			closeAdLayer() {
+				this.showAdLayer = false
+				if (this._adWaitTimer) {
+					clearTimeout(this._adWaitTimer)
+					this._adWaitTimer = null
+				}
 			},
 		}
 	}
@@ -294,6 +343,90 @@
 				color: #000000;
 				line-height: 88rpx;
 				text-align: center;
+			}
+		}
+
+		// 联系前广告弹层
+		.ad-layer {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 1000;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.ad-mask {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: rgba(0, 0, 0, 0.6);
+			}
+
+			.ad-panel {
+				position: relative;
+				width: 640rpx;
+				max-height: 80vh;
+				overflow: hidden;
+				background: #FFFFFF;
+				border-radius: 20rpx;
+				padding: 24rpx;
+				box-sizing: border-box;
+
+				.ad-panel-head {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					margin-bottom: 16rpx;
+
+					.ad-panel-title {
+						font-size: 26rpx;
+						color: rgba(34, 34, 34, 0.5);
+					}
+
+					.ad-close {
+						width: 48rpx;
+						height: 48rpx;
+						line-height: 48rpx;
+						text-align: center;
+						font-size: 32rpx;
+						color: rgba(34, 34, 34, 0.4);
+					}
+				}
+
+				.ad-loading {
+					height: 280rpx;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					text {
+						font-size: 26rpx;
+						color: rgba(34, 34, 34, 0.4);
+					}
+				}
+
+				.ad-tip {
+					margin: 16rpx 0;
+					font-size: 22rpx;
+					color: rgba(34, 34, 34, 0.4);
+					text-align: center;
+				}
+
+				.ad-continue {
+					width: 100%;
+					height: 88rpx;
+					background: #FDD000;
+					border-radius: 16rpx;
+					font-size: 30rpx;
+					color: #000000;
+					line-height: 88rpx;
+					text-align: center;
+				}
 			}
 		}
 	}

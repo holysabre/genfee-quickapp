@@ -46,3 +46,8 @@ export const getContactHistory = () => {
 export const getIdentify = (params) => {
 	return requestFun('post', `/users/identify/personal`, params)
 }
+
+// 全局设置（含广告开关 jhdn_ad_*）
+export const getGlobalSettings = () => {
+	return requestFun('get', `/settings/global`)
+}

@@ -1,7 +1,16 @@
 <script>
+	// #ifdef QUICKAPP-WEBVIEW-HUAWEI
+	import {
+		initAds
+	} from '@/utils/ads.js'
+	// #endif
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			// #ifdef QUICKAPP-WEBVIEW-HUAWEI
+			// 预初始化广告（拉取服务端开关与广告位配置；失败静默降级，不阻塞启动）
+			initAds()
+			// #endif
 		},
 		onShow: function() {
 			console.log('App Show')
