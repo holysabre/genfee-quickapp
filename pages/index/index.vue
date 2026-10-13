@@ -149,6 +149,7 @@
 			this.getList(true, true)
 		},
 		onReachBottom() {
+			console.log('reachBottom page=' + this.page + '/' + this.pageTotal)
 			if (this.page < this.pageTotal) {
 				this.page += 1
 				this.getList(false, false)
