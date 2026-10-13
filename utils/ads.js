@@ -21,9 +21,18 @@
  */
 
 import { getGlobalSettings } from '@/api'
+import { isPrivacyAccepted } from '@/utils/privacy.js'
 
-// 华为官方测试广告位：原生大图文 1080x607
+// 华为官方测试广告位（快应用 RPK 用 `test` 前缀这一套——鲸鸿动能客服确认）。
+// 参考位清单：
+//  - 原生大图文 1080x607：testu7m3hc4gvm（本项目在用）
+//  - 原生小图 testb65czjivt9 / 原生视频文 testy63txaom86 / 原生三小图 testr6w14o0hqz
+//  - 横幅 testw6vs28auh3 / 插屏 testb4znbuh3n2 / 激励视频 testx9dtjwj8hp
+// 【上架流程】正式广告位须先在鲸鸿动能后台创建展示位 → 自测 + 验收 → 运营配置广告后生效；
+//   生效后将正式 ID 配置到服务端 jhdn_ad_native 并把 jhdn_ad_test 置 0（或填入下方兜底常量）。
 const TEST_NATIVE_AD_UNIT = 'testu7m3hc4gvm'
+// 正式广告位 ID 兜底（尚未申请，保持为空；服务端 jhdn_ad_native 优先生效）
+const FALLBACK_FORMAL_AD_UNIT = ''
 
 let _qa = null
 let _qaProbed = false
@@ -66,7 +75,8 @@ export function initAds() {
 			var enableFlag = d.jhdn_ad_enable
 			_cfg.enabled = _cfg.supported && String(enableFlag) !== '0'
 			_cfg.useTest = String(d.jhdn_ad_test) !== '0' // 默认测试位
-			_cfg.nativeId = (!_cfg.useTest && d.jhdn_ad_native) ? d.jhdn_ad_native : TEST_NATIVE_AD_UNIT
+			var formalId = d.jhdn_ad_native || FALLBACK_FORMAL_AD_UNIT
+			_cfg.nativeId = (!_cfg.useTest && formalId) ? formalId : TEST_NATIVE_AD_UNIT
 			_cfg.ready = true
 			console.log('[ads] init => ' + JSON.stringify({
 				enabled: _cfg.enabled,
@@ -92,4 +102,13 @@ export function initAds() {
 
 export function getAdConfig() {
 	return _cfg
+}
+
+/**
+ * 合规闸门：是否可以发起广告请求 —— 环境可用 && 服务端未关闭 && 用户已同意隐私政策
+ * 【鲸鸿动能自检项】调用广告请求前必须已展示并取得用户对隐私政策的同意；
+ * 未同意前一律不得创建广告实例、不得发起广告请求。
+ */
+export function canRequestAds() {
+	return !!(_cfg.ready && _cfg.enabled && isPrivacyAccepted())
 }

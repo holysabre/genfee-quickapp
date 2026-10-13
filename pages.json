@@ -44,6 +44,13 @@
 				"navigationBarBackgroundColor": "#ffffff", //导航条颜色//2330e5蓝
 				"backgroundColor": "#ffffff" //页面颜色
 			}
+		}, {
+			"path": "pages/privacy",
+			"style": {
+				"navigationBarTitleText": "隐私政策",
+				"navigationBarBackgroundColor": "#ffffff", //导航条颜色
+				"backgroundColor": "#ffffff" //页面颜色
+			}
 		}
 	],
 	/* 全局页面样式 */

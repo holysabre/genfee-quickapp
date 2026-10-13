@@ -1,15 +1,19 @@
 <template>
-	<!-- 原生广告（自渲染）卡片：数据来自 qa.createNativeAd onLoad 返回的 adList[0]
-	     注意：广告实例（ad）必须在本组件内创建与调用（跨 chunk 传递会破坏其闭包，报 "l is not defined"） -->
-	<view class="ad-feed" v-if="data" @click="onClick">
-		<view class="ad-media" v-if="imgUrl">
+	<!-- 原生广告（自渲染）卡片
+	     合规要点（鲸鸿动能自检项）：
+	     - 广告卡片根节点不可点击，仅图片/标题/按钮可点击跳转落地页
+	     - 展示广告标识、广告来源、关闭按钮（≥32dp 且与周边底色有区分）
+	     - 无填充/失败不显示广告位；请求失败不做循环重试
+	     架构约束：广告实例必须在本组件内创建与调用（跨 chunk 传递会破坏闭包） -->
+	<view class="ad-feed" v-if="data && !closed">
+		<view class="ad-media" v-if="imgUrl" @click="onAdClick">
 			<image class="ad-img" :src="imgUrl" mode="aspectFill"></image>
 		</view>
 		<view class="ad-body">
 			<view class="ad-row">
-				<image class="ad-icon" v-if="data.icon" :src="data.icon" mode="aspectFill"></image>
+				<image class="ad-icon" v-if="data.icon" :src="data.icon" mode="aspectFill" @click="onAdClick"></image>
 				<view class="ad-info">
-					<view class="ad-title">{{data.title}}</view>
+					<view class="ad-title omit2" @click="onAdClick">{{data.title}}</view>
 					<view class="ad-desc" v-if="data.desc">{{data.desc}}</view>
 				</view>
 			</view>
@@ -18,23 +22,31 @@
 					<text class="ad-tag-txt">广告</text>
 					<text class="ad-src">{{data.source||'赞助商'}}</text>
 				</view>
-				<view class="ad-btn">{{data.clickBtnTxt||'查看详情'}}</view>
+				<view class="ad-btn" @click="onAdClick">{{data.clickBtnTxt||'查看详情'}}</view>
 			</view>
 		</view>
+		<!-- 关闭按钮：64rpx(≥32dp)，灰底圆与白色卡片/图片有区分
+		     注意：不可用 @click.stop（catchtap 在快应用-webview 渲染层不触发），父节点无点击处理无需阻止冒泡 -->
+		<view class="ad-close" @click="onClose">✕</view>
 	</view>
 </template>
 
 <script>
 	import {
-		initAds
+		initAds,
+		canRequestAds
 	} from '@/utils/ads.js'
+	import {
+		onPrivacyAccepted
+	} from '@/utils/privacy.js'
 
 	export default {
 		name: 'ad-feed',
 		data() {
 			return {
 				ad: null, // 原生广告实例（仅本组件chunk内使用）
-				data: null // 广告数据 adList[0]
+				data: null, // 广告数据 adList[0]
+				closed: false // 用户是否关闭了本广告位
 			}
 		},
 		computed: {
@@ -62,7 +74,18 @@
 				return null
 			},
 			load() {
+				if (this._loaded || this._failed || this._waiting) return
 				initAds().then(cfg => {
+					// 合规闸门：未同意隐私政策前不发起广告请求（等待同意后自动加载）
+					if (!canRequestAds()) {
+						console.log('[adfeed] wait privacy')
+						this._waiting = true
+						onPrivacyAccepted(() => {
+							this._waiting = false
+							this.load()
+						})
+						return
+					}
 					if (!cfg || !cfg.enabled) {
 						console.log('[adfeed] skip: disabled')
 						this.$emit('fail')
@@ -84,13 +107,17 @@
 						this.$emit('fail')
 						return
 					}
+					this._loaded = true
 					ad.onError(e => {
+						// 失败即隐藏广告位，不做重试（合规：请求失败禁止频繁重试）
+						this._failed = true
 						console.log('[adfeed] onError => ' + JSON.stringify(e))
 						this.$emit('fail')
 					})
 					ad.onLoad(res => {
 						var item = res && res.adList && res.adList[0]
 						if (!item || !item.adId) {
+							this._failed = true
 							console.log('[adfeed] empty ad')
 							this.$emit('fail')
 							return
@@ -121,7 +148,7 @@
 					this.$emit('fail')
 				})
 			},
-			onClick() {
+			onAdClick() {
 				// 点击上报（SDK 随后自动打开广告落地页）
 				try {
 					if (this.ad && this.data) {
@@ -133,6 +160,15 @@
 				} catch (e) {
 					console.log('[adfeed] click err => ' + (e && (e.stack || e.message)))
 				}
+			},
+			// 用户关闭广告：隐藏并销毁，本广告位不再展示（合规：必须有可关闭能力）
+			onClose() {
+				this.closed = true
+				try {
+					if (this.ad && this.ad.destroy) this.ad.destroy()
+				} catch (e) {}
+				console.log('[adfeed] closed by user')
+				this.$emit('close')
 			}
 		}
 	}
@@ -140,6 +176,7 @@
 
 <style lang="scss" scoped>
 	.ad-feed {
+		position: relative;
 		margin-bottom: 20rpx;
 		background-color: #FFFFFF;
 		border-radius: 16rpx;
@@ -184,6 +221,11 @@
 						font-weight: 600;
 						line-height: 40rpx;
 						word-break: break-all;
+						/* 标题至少预留两行（≥22个汉字位置） */
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						-webkit-line-clamp: 2;
+						overflow: hidden;
 					}
 
 					.ad-desc {
@@ -237,6 +279,21 @@
 					color: #000000;
 				}
 			}
+		}
+
+		// 关闭按钮：64rpx(≥32dp)，灰底圆、颜色可区分
+		.ad-close {
+			position: absolute;
+			top: 12rpx;
+			right: 12rpx;
+			width: 64rpx;
+			height: 64rpx;
+			line-height: 64rpx;
+			text-align: center;
+			font-size: 30rpx;
+			color: #8a8a8a;
+			background: rgba(240, 240, 240, 0.92);
+			border-radius: 32rpx;
 		}
 	}
 </style>
