@@ -101,6 +101,12 @@
 
 <script>
 	import adFeed from '@/components/ad-feed.vue'
+	import {
+		getTopicsDetail
+	} from '@/api/index.js'
+	import {
+		decorateTopic
+	} from '@/utils/tool.js'
 	export default {
 		data() {
 			return {
@@ -128,29 +134,23 @@
 			this.loadInfo(true)
 		},
 		methods: {
-			// 详情数据来自列表页缓存（/topics/{id} 接口需登录态，当前未接入登录，暂不请求）
-			loadInfo(refresh = false) {
+			// 详情数据来自 /topics/public/{id}（公开接口，无需登录态）
+			async loadInfo(refresh = false) {
 				try {
-					var raw = uni.getStorageSync('topic_detail_' + this.id)
-					if (raw) {
-						var item = typeof raw === 'string' ? JSON.parse(raw) : raw
-						// 兜底：补齐平铺字段（防脏缓存）
-						if (item._cat === undefined) item._cat = item.category_name || '其他'
-						if (item._salary === undefined) item._salary = (item.salary && item.salary !== '-') ? item.salary : ''
-						if (item._company === undefined) item._company = item.company || item.company_name || ''
-						if (item._phone === undefined) item._phone = item.phone || item.mobile || ''
-						this.info = item
-						console.log('detail loaded from cache, id=' + this.id)
-					} else {
-						console.log('detail cache miss, id=' + this.id)
+					let res = await getTopicsDetail(this.id)
+					console.log('detail-res--->', res)
+					if (res.code === 200) {
+						let d = (res.data && res.data.data) || res.data || {}
+						this.info = decorateTopic(d)
 					}
 				} catch (e) {
-					console.log('detail cache err => ' + (e && e.message))
+					console.log('detail load err => ' + (e && e.message))
 				}
 				if (refresh) {
 					uni.stopPullDownRefresh()
 				}
-			}, //弹层广告就绪
+			},
+			//弹层广告就绪
 			onAdReady() {
 				this.adReady = true
 				console.log('[ad] layer ad ready')
