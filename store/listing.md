@@ -39,5 +39,7 @@ https://gongfeng-privacy.app.workbuddy.host/
 |---|---|---|---|
 | 应用图标 | store/icon-512.png | 512×512 PNG | ✅ 已就绪 |
 | 应用图标（小）| store/icon-216.png | 216×216 PNG | ✅ 已就绪 |
-| 应用截图 | store/screenshot-*.png | 1080×2340 | ⏳ 待截取（需连接手机）|
+| 应用截图①首页 | store/screenshot-1-home.png | 1080×2340 | ✅ 已就绪 |
+| 应用截图②信息流广告 | store/screenshot-2-ad.png | 1080×2340 | ✅ 已就绪 |
+| 应用截图③详情页 | store/screenshot-3-detail.png | 1080×2340 | ✅ 已就绪 |
 | 隐私政策页 | privacy-site/index.html | 已上线 | ✅ https://gongfeng-privacy.app.workbuddy.host/ |
