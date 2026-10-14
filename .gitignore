@@ -1,2 +1,4 @@
 unpackage
 .workbuddy/
+# release 签名证书：私钥绝不可提交（上架后签名不可更换，请本地安全备份）
+sign/
