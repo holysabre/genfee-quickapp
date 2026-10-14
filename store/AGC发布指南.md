@@ -1,6 +1,6 @@
 # 工蜂招工找活 — AGC（AppGallery Connect）上架操作指南
 
-> 生成时间：2026-10-14　适用包名：`com.ggfee.quickapp`　版本：1.0.0（versionCode 1）
+> 生成时间：2026-10-14　适用包名：`com.genfee.quickapp`　版本：1.0.0（versionCode 1）
 
 ---
 
@@ -8,7 +8,7 @@
 
 | 项目 | 位置/值 |
 |---|---|
-| **上架 RPK 包** | `unpackage/dist/build/quickapp-webview-huawei/.quickapp/dist/com.ggfee.quickapp.rpk`（约 155KB，正式签名+压缩）|
+| **上架 RPK 包** | `unpackage/dist/build/quickapp-webview-huawei/.quickapp/dist/com.genfee.quickapp.rpk`（约 155KB，正式签名+压缩）|
 | **签名证书 SHA256 指纹** | `A0:A0:36:35:B9:47:7C:BC:B0:B2:6D:88:D7:98:35:C6:74:E1:3F:66:48:53:B2:93:4D:81:94:94:17:5D:21:DA` |
 | 证书文件（**务必备份！**） | `sign/release/private.pem` + `sign/release/certificate.pem` |
 | 应用图标（512×512） | `store/icon-512.png` |
@@ -28,7 +28,7 @@
 
 1. 打开 https://developer.huawei.com/consumer/cn/service/josp/agc/index.html 登录开发者账号
 2. 「我的项目」→ 检查是否有「工蜂招工找活」快应用
-   - **没有** → 创建快应用，**包名必须填 `com.ggfee.quickapp`**（与 rpk 包名一致，不可更改）
+   - **没有** → 创建快应用，**包名必须填 `com.genfee.quickapp`**（与 rpk 包名一致，不可更改）
    - **已有** → 进入该项目
 
 ### 第 2 步：配置证书指纹（重要，先于上传）
@@ -39,7 +39,7 @@
 ### 第 3 步：上传版本
 
 - 「版本管理」→「上传 RPK」→ 选择文件：
-  `unpackage/dist/build/quickapp-webview-huawei/.quickapp/dist/com.ggfee.quickapp.rpk`
+  `unpackage/dist/build/quickapp-webview-huawei/.quickapp/dist/com.genfee.quickapp.rpk`
 - 版本号填写：`1.0.0`（versionCode 1）
 
 ### 第 4 步：填写上架资料

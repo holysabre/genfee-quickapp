@@ -4,7 +4,7 @@
 
 ## 项目概览
 
-「工蜂招工找活平台」uni-app 客户端，**Vue 2**。核心发布目标是**华为快应用-webview 版**（`quickapp-webview-huawei`，包名 `com.ggfee.quickapp`），同时兼容微信小程序（appid `wx3d729ba6e18f2280`）与抖音小程序。
+「工蜂招工找活平台」uni-app 客户端，**Vue 2**。核心发布目标是**华为快应用-webview 版**（`quickapp-webview-huawei`，包名 `com.genfee.quickapp`），同时兼容微信小程序（appid `wx3d729ba6e18f2280`）与抖音小程序。
 
 - **无 package.json / npm / 构建脚本**，使用 **HBuilderX** 打开项目运行与发布（发行 → 快应用-webview / 微信小程序等）
 - 构建产物在 `unpackage/`（已 gitignore）；`.workbuddy/` 同样忽略
