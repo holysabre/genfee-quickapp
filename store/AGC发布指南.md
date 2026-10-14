@@ -8,7 +8,7 @@
 
 | 项目 | 位置/值 |
 |---|---|
-| **上架 RPK 包** | `unpackage/dist/build/quickapp-webview-huawei/.quickapp/dist/com.ggfee.quickapp.rpk`（152KB，正式签名+压缩）|
+| **上架 RPK 包** | `unpackage/dist/build/quickapp-webview-huawei/.quickapp/dist/com.ggfee.quickapp.rpk`（约 155KB，正式签名+压缩）|
 | **签名证书 SHA256 指纹** | `A0:A0:36:35:B9:47:7C:BC:B0:B2:6D:88:D7:98:35:C6:74:E1:3F:66:48:53:B2:93:4D:81:94:94:17:5D:21:DA` |
 | 证书文件（**务必备份！**） | `sign/release/private.pem` + `sign/release/certificate.pem` |
 | 应用图标（512×512） | `store/icon-512.png` |
@@ -71,7 +71,7 @@
 
 ## 四、常见问题
 
-**Q：为什么上传的 rpk 只有 152KB？**
+**Q：为什么上传的 rpk 只有 155KB？**
 A：release 构建启用了代码压缩（uglify），且静态资源已优化，属正常大小。
 
 **Q：审核被驳回要求补充材料？**
