@@ -208,3 +208,28 @@ export function downloadFile(url, type) {
 		}
 	})
 }
+
+/**
+ * topics 数据映射：平铺模板可直接读取的字段（_cat / _company / _phone / _salary）
+ * 快应用-webview 模板表达式能力有限，复杂取值统一在 JS 中完成；列表与详情共用
+ */
+export function decorateTopic(item) {
+	item = item || {}
+	var cats = ''
+	try {
+		if (item.topic_categories && item.topic_categories.length) {
+			cats = item.topic_categories.map(function(c) {
+				return c.category_name || (c.category && c.category.name) || ''
+			}).filter(function(x) {
+				return !!x
+			}).join('、')
+		}
+	} catch (e) {}
+	var salary = (item.salary && item.salary !== '-') ? item.salary : ''
+	return Object.assign({}, item, {
+		_cat: cats || '其他',
+		_company: item.company || item.company_name || '',
+		_phone: item.phone || item.mobile || '',
+		_salary: salary
+	})
+}

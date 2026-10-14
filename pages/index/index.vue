@@ -105,6 +105,9 @@
 		getTopics,
 		addContact
 	} from "@/api/index.js"
+	import {
+		decorateTopic
+	} from '@/utils/tool.js'
 	import pickerAddress from '@/components/liudx-pickerAddress/index.vue'
 	import adFeed from '@/components/ad-feed.vue'
 	import {
@@ -256,10 +259,6 @@
 			},
 			changeItem(item) {
 				console.log('item===>', item)
-				// 详情数据传递（/topics/{id} 接口需登录态，详情页改用列表数据）
-				try {
-					uni.setStorageSync('topic_detail_' + item.id, JSON.stringify(item))
-				} catch (e) {}
 				uni.navigateTo({
 					url: '/pages/index/detail?id=' + item.id
 				})
@@ -278,7 +277,7 @@
 						origin = []
 					}
 					// topics 接口字段适配（分类/公司/电话为嵌套或异名字段，平铺为模板可直接读取的字段）
-					this.rawJobs = origin.concat((res.data.data || []).map(item => this.decorateTopic(item)))
+					this.rawJobs = origin.concat((res.data.data || []).map(item => decorateTopic(item)))
 					this.rebuildList()
 					this.pageTotal = res.data.last_page
 					// 修正页码（服务端实际页数少于请求页时，如空页回归）
@@ -289,26 +288,6 @@
 				if (refresh) {
 					uni.stopPullDownRefresh()
 				}
-			},
-			// topics 数据映射：_cat / _company / _phone / _salary（快应用模板表达式能力有限，统一在此平铺）
-			decorateTopic(item) {
-				var cats = ''
-				try {
-					if (item.topic_categories && item.topic_categories.length) {
-						cats = item.topic_categories.map(function(c) {
-							return c.category_name || (c.category && c.category.name) || ''
-						}).filter(function(x) {
-							return !!x
-						}).join('、')
-					}
-				} catch (e) {}
-				var salary = (item.salary && item.salary !== '-') ? item.salary : ''
-				return Object.assign({}, item, {
-					_cat: cats || '其他',
-					_company: item.company || '',
-					_phone: item.phone || '',
-					_salary: salary
-				})
 			},
 			// 重建列表：每 5 条招聘后插入一个广告位（广告由 ad-feed 组件自治加载）
 			rebuildList() {
@@ -649,9 +628,11 @@
 						background: #FFFFFF;
 					}
 
+					// 与上两个按钮同尺寸、同字号的描边样式，避免"暂不同意"被弱化（审核要求按钮权重对等）
 					.p-deny {
-						color: #888888;
-						font-size: 26rpx;
+						border: 2rpx solid #DDDDDD;
+						color: #444444;
+						background: #FFFFFF;
 						margin-bottom: 0;
 					}
 				}
