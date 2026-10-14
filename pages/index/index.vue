@@ -628,9 +628,11 @@
 						background: #FFFFFF;
 					}
 
+					// 与上两个按钮同尺寸、同字号的描边样式，避免"暂不同意"被弱化（审核要求按钮权重对等）
 					.p-deny {
-						color: #888888;
-						font-size: 26rpx;
+						border: 2rpx solid #DDDDDD;
+						color: #444444;
+						background: #FFFFFF;
 						margin-bottom: 0;
 					}
 				}
